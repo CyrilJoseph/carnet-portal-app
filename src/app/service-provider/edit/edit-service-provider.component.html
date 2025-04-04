@@ -1,0 +1,32 @@
+<div class="service-provider-action-buttons">
+    <button mat-button (click)="accordion().openAll()">Expand All</button>
+    <button mat-button (click)="accordion().closeAll()">Collapse All</button>
+</div>
+<mat-accordion class="service-provider-headers-align" multi>
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+            <mat-panel-title> Basic Details </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <app-basic-details [spid]="spid" [isEditMode]="isEditMode"></app-basic-details>
+
+        <!-- [initialData]="serviceProviderData"
+(formReady)="onBasicDetailsFormReady($event)"
+(validityChange)="onBasicDetailsValidityChange($event)"
+(countrySelected)="onCountrySelected($event)"> -->
+
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+            <mat-panel-title> Contacts </mat-panel-title>
+        </mat-expansion-panel-header>
+        <app-contacts [spid]="spid"></app-contacts>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+            <mat-panel-title> Carnet Sequence </mat-panel-title>
+
+        </mat-expansion-panel-header>
+    </mat-expansion-panel>
+</mat-accordion>

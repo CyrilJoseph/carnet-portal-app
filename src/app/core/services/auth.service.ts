@@ -1,13 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'https://7b3e2f20-9102-4392-bca7-7f4c419bb640.mock.pstmn.io';//environment.apiUrl;
+  private apiUrl = environment.apiUrl;
   private isUserLoggedIn = false;
+
   constructor(private http: HttpClient) { }
 
   // Auth APIs

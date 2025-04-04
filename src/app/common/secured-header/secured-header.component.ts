@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
   selector: 'app-secured-header',
   imports: [],
   templateUrl: './secured-header.component.html',
-  styleUrl: './secured-header.component.css'
+  styleUrl: './secured-header.component.scss'
 })
 export class SecuredHeaderComponent {
 

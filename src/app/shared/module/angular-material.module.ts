@@ -22,6 +22,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import {MatAccordion, MatExpansionModule} from '@angular/material/expansion';
 
 @NgModule({
   declarations: [],
@@ -46,7 +47,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatTableModule,
     MatTabsModule,
     MatToolbarModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatExpansionModule,
+    MatAccordion
   ],
   exports:[
     MatButtonModule,
@@ -68,7 +71,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatTableModule,
     MatTabsModule,
     MatToolbarModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatExpansionModule,
+    MatAccordion
   ]
 })
 export class AngularMaterialModule { }

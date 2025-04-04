@@ -9,7 +9,7 @@ import { AngularMaterialModule } from '../shared/module/angular-material.module'
   selector: 'app-login',
   imports: [ReactiveFormsModule, CommonModule, AngularMaterialModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrl: './login.component.scss'
 })
 export class LoginComponent {
   loginForm: FormGroup;
