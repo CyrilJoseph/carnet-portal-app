@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    apiUrl: 'http://my-dev-url'
+    apiUrl: 'https://dev.alphaomegainfosys.com/test-api'
 };

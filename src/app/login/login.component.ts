@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { AngularMaterialModule } from '../shared/module/angular-material.module';
+import { UserService } from '../core/services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -19,6 +20,7 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
+    private userService: UserService,
     private router: Router
   ) {
     this.loginForm = this.fb.group({
@@ -28,7 +30,7 @@ export class LoginComponent {
   }
 
   ngOnInit(): void {
-    if (this.authService.isLoggedIn()) {
+    if (this.userService.isLoggedIn()) {
       this.router.navigate(['/home']);
     }
   }
@@ -45,9 +47,8 @@ export class LoginComponent {
           this.isLoading = false;
           if (response?.error) {
             this.errorMessage = response.error;
-            this.authService.setUserLogin(false);
           } else {
-            this.authService.setUserLogin(true);
+            this.userService.setUser(username);
             this.router.navigate(['/home']);
           }
         },

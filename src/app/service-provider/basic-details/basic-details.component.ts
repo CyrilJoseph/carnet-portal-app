@@ -22,9 +22,10 @@ export class BasicDetailsComponent implements OnInit, OnDestroy {
   @Input() isEditMode = false;
   @Input() spid: number = 0;
 
- // @Output() formReady = new EventEmitter<FormGroup>();
- // @Output() validityChange = new EventEmitter<boolean>();
- // @Output() valueChange = new EventEmitter<BasicDetail>();
+  // @Output() formReady = new EventEmitter<FormGroup>();
+  // @Output() validityChange = new EventEmitter<boolean>();
+  // @Output() valueChange = new EventEmitter<BasicDetail>();
+  @Output() spidCreated = new EventEmitter<string>();
 
   basicDetailsForm: FormGroup;
   countries: Country[] = [];
@@ -47,7 +48,7 @@ export class BasicDetailsComponent implements OnInit, OnDestroy {
     this.loadLookupData();
 
     // Emit the form when it's ready
-   // this.formReady.emit(this.basicDetailsForm);
+    // this.formReady.emit(this.basicDetailsForm);
 
     // Listen for validity changes
     // this.basicDetailsForm.statusChanges
@@ -212,8 +213,12 @@ export class BasicDetailsComponent implements OnInit, OnDestroy {
       : this.serviceProviderService.createBasicDetails(basicDetailData);
 
     saveObservable.subscribe({
-      next: () => {
+      next: (basicData: any) => {
         this.notificationService.showSuccess(`Basic details ${this.isEditMode ? 'updated' : 'added'} successfully`);
+
+        if (!this.isEditMode) {
+          this.spidCreated.emit("22");//basicData.spid);
+        }
       },
       error: (error) => {
         this.notificationService.showError(`Failed to ${this.isEditMode ? 'update' : 'add'} basic details`);

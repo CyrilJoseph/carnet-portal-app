@@ -1,6 +1,46 @@
-<app-basic-details [isEditMode]="isEditMode"></app-basic-details>
+<div class="service-provider-container">
+    <mat-stepper orientation="vertical" [linear]="true" (selectionChange)="onStepChange($event)"
+        [selectedIndex]="currentStep">
 
-<!-- [initialData]="serviceProviderData"
-(formReady)="onBasicDetailsFormReady($event)"
-(validityChange)="onBasicDetailsValidityChange($event)"
-(countrySelected)="onCountrySelected($event)"> -->
+        <!-- Basic Details Step -->
+        <mat-step [completed]="basicDetailsCompleted">
+            <ng-template matStepLabel>Basic Details</ng-template>
+
+            <app-basic-details [isEditMode]="isEditMode" (spidCreated)="onBasicDetailsSaved($event)">
+            </app-basic-details>
+
+            <div class="step-actions">
+                <button mat-raised-button color="primary" [disabled]="!serviceProviderId" (click)="currentStep = 1">
+                    Next
+                </button>
+            </div>
+        </mat-step>
+
+        <!-- Contacts Step -->
+        <mat-step [completed]="contactsCompleted" [editable]="!!serviceProviderId">
+            <ng-template matStepLabel>Contacts</ng-template>
+
+            <app-contacts *ngIf="serviceProviderId" [spid]="serviceProviderId">
+            </app-contacts>
+
+            <div class="step-actions">
+                <button mat-button (click)="currentStep = 0">Back</button>
+                <button mat-raised-button color="primary" [disabled]="!serviceProviderId">
+                    Next
+                </button>
+            </div>
+        </mat-step>
+
+        <!-- Carnet Sequence Step -->
+        <mat-step [editable]="!!serviceProviderId">
+            <ng-template matStepLabel>Carnet Sequence</ng-template>
+
+            <div class="step-actions">
+                <button mat-button (click)="currentStep = 1">Back</button>
+                <button mat-raised-button color="primary" [disabled]="!serviceProviderId">
+                    Next
+                </button>
+            </div>
+        </mat-step>
+    </mat-stepper>
+</div>
