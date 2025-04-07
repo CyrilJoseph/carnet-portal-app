@@ -6,7 +6,8 @@
                 <div class="loading-text">Loading data...</div>
             </div>
 
-            <form [formGroup]="basicDetailsForm" class="details-form" *ngIf="!isLoading" (ngSubmit)="saveBasicDetails()">
+            <form [formGroup]="basicDetailsForm" class="details-form" *ngIf="!isLoading"
+                (ngSubmit)="saveBasicDetails()">
                 <!-- Company Information Row -->
                 <div class="form-row">
                     <mat-form-field appearance="outline" class="company-name">
@@ -108,7 +109,7 @@
                 <div class="form-row">
                     <mat-form-field appearance="outline" class="issuing-region">
                         <mat-label>Issuing Region</mat-label>
-                        <mat-select formControlName="issuingRegion" required>
+                        <mat-select formControlName="issuingRegion" required [disabled]="isEditMode">
                             <mat-option *ngFor="let region of regions" [value]="region.region">
                                 {{ region.regionname }}
                             </mat-option>
@@ -120,7 +121,7 @@
 
                     <mat-form-field appearance="outline" class="replacement-region">
                         <mat-label>Replacement Region</mat-label>
-                        <mat-select formControlName="replacementRegion" required>
+                        <mat-select formControlName="replacementRegion" [disabled]="isEditMode" required>
                             <mat-option *ngFor="let region of regions" [value]="region.region">
                                 {{ region.regionname }}
                             </mat-option>

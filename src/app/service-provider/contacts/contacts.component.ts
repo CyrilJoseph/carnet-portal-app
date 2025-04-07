@@ -1,6 +1,6 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
@@ -11,12 +11,14 @@ import { ServiceProviderService } from '../../core/services/service-provider.ser
 import { Contact } from '../../core/models/service-provider/contact';
 import { PhonePipe } from '../../shared/pipes/phone.pipe';
 import { CommonModule } from '@angular/common';
+import { CustomPaginator } from '../../shared/custom-paginator';
 
 @Component({
   selector: 'app-contacts',
   imports: [AngularMaterialModule, ReactiveFormsModule, PhonePipe, CommonModule],
   templateUrl: './contacts.component.html',
-  styleUrl: './contacts.component.scss'
+  styleUrl: './contacts.component.scss',
+  providers: [{ provide: MatPaginatorIntl, useClass: CustomPaginator }],
 })
 export class ContactsComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -29,7 +31,9 @@ export class ContactsComponent implements OnInit {
   currentContactId: number | null = null;
   isLoading = false;
   showForm = false;
+
   @Input() spid: number = 0;
+  @Output() hasContacts = new EventEmitter<boolean>();
 
   constructor(
     private fb: FormBuilder,
@@ -125,6 +129,7 @@ export class ContactsComponent implements OnInit {
         this.notificationService.showSuccess(`Contact ${this.isEditing ? 'updated' : 'added'} successfully`);
         this.loadContacts();
         this.cancelEdit();
+        this.hasContacts.emit(true);
       },
       error: (error) => {
         this.notificationService.showError(`Failed to ${this.isEditing ? 'update' : 'add'} contact`);

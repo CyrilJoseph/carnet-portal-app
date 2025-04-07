@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Contact } from '../models/service-provider/contact';
 import { UserService } from './user.service';
 import { environment } from '../../../environments/environment';
+import { CarnetSequence } from '../models/service-provider/carnet-sequence';
 
 @Injectable({
   providedIn: 'root'
@@ -14,66 +15,49 @@ export class ServiceProviderService {
 
   constructor(private http: HttpClient, private userService: UserService) { }
 
-  getServiceProviderById(id: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/oracle/GetHomePageData/${id}`);
-  }
-
   getBasicDetailsById(id: number): BasicDetail | any {
-
-    return this.getServiceProviderById(id).pipe(
-      map(response => {
-
-        const basicDetails = response.p_basic_details.find((detail: any) => detail.SPID === id);
-
-        if (!basicDetails) {
-          return of({} as BasicDetail);
-        }
-
-        return {
-          spid: basicDetails.SPID,
-          companyName: basicDetails.NAMEOF,
-          lookupCode: basicDetails.LOOKUPCODE,
-          address1: basicDetails.ADDRESS1,
-          address2: basicDetails.ADDRESS2,
-          city: basicDetails.CITY,
-          state: basicDetails.STATE,
-          country: basicDetails.COUNTRY,
-          issuingRegion: basicDetails.ISSUINGREGION,
-          replacementRegion: basicDetails.REPLACEMENTREGION,
-          zip: basicDetails.ZIP
-        };
-      }),
-      catchError(error => {
-        console.error('Unable to fetch the details', error);
-        return of({} as BasicDetail);
-      }
-      ));
+    return this.http.get<any[]>(`${this.apiUrl}/oracle/GetSelectedServiceprovider?p_spid=${id}`).pipe(
+      map(response => this.mapToBasicDetail(response)));
   }
 
-  getContactsById(id: number): Observable<Contact[]> | any {
+  private mapToBasicDetail(basicDetails: any): BasicDetail {
+    return {
+      spid: basicDetails.SPID,
+      companyName: basicDetails.NAMEOF,
+      lookupCode: basicDetails.LOOKUPCODE,
+      address1: basicDetails.ADDRESS1,
+      address2: basicDetails.ADDRESS2,
+      city: basicDetails.CITY,
+      state: basicDetails.STATE,
+      country: basicDetails.COUNTRY,
+      issuingRegion: basicDetails.ISSUINGREGION,
+      replacementRegion: basicDetails.REPLACEMENTREGION,
+      zip: basicDetails.ZIP,
+      cargoSurety: basicDetails.cargoSurety,
+      cargoPolicyNo: basicDetails.cargoPolicyNo,
+      bondSurety: basicDetails.bondSurety
+    };
+  }
 
-    return this.getServiceProviderById(id).pipe(
-      map(response => {
-        return response.p_contacts
-          .filter((contact: any) => contact.SPID === id)
-          .map((contact: any) => ({
-            spContactId: contact.SPCONTACTID,
-            serviceProviderId: contact.SPID,
-            defaultContact: contact.DEFCONTACTFLAG === 'Y',
-            firstName: contact.FIRSTNAME,
-            lastName: contact.LASTNAME,
-            title: contact.TITLE,
-            phone: contact.PHONENO,
-            mobile: contact.MOBILENO,
-            fax: contact.FAXNO || null,
-            email: contact.EMAILADDRESS,
-            middleInitial: contact.MIDDLEINITIAL || null
-          }));
-      }),
-      catchError(error => {
-        console.error('Unable to fetch the details', error);
-        return of({} as Contact[]);
-      }));
+  getContactsById(id: number): Observable<Contact[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/oracle/GetSPAllContacts?p_SPid=${id}`).pipe(
+      map(response => this.mapToContacts(response)));
+  }
+
+  private mapToContacts(data: any[]): Contact[] {
+    return data.map(contact => ({
+      spContactId: contact.SPCONTACTID,
+      serviceProviderId: contact.SPID,
+      defaultContact: contact.DEFCONTACTFLAG === 'Y',
+      firstName: contact.FIRSTNAME,
+      lastName: contact.LASTNAME,
+      title: contact.TITLE,
+      phone: contact.PHONENO,
+      mobile: contact.MOBILENO,
+      fax: contact.FAXNO || null,
+      email: contact.EMAILADDRESS,
+      middleInitial: contact.MIDDLEINITIAL || null
+    }));
   }
 
   createBasicDetails(data: BasicDetail): Observable<any> {
@@ -93,8 +77,6 @@ export class ServiceProviderService {
       p_cargopolicyno: null,
       p_cargosurety: null,
       p_user_id: this.userService.getUser(),
-      // P_NOTES: string,
-      // P_FILEIDS: string
     }
 
     return this.http.post(`${this.apiUrl}/oracle/InsertNewServiceProvider`, basicDetails);
@@ -114,9 +96,9 @@ export class ServiceProviderService {
       p_country: data.country,
       p_issuingregion: data.issuingRegion,
       p_replacementregion: data.replacementRegion,
-      p_bondsurety: data.bondSurety,
-      p_cargopolicyno: data.CargoPolicyNo,
-      p_cargosurety: data.cargoSurety,
+      // p_bondsurety: data.bondSurety,
+      // p_cargopolicyno: data.cargoPolicyNo,
+      // p_cargosurety: data.cargoSurety,
       p_user_id: this.userService.getUser(),
       // P_NOTES: string,
       // P_FILEIDS: string
@@ -165,5 +147,34 @@ export class ServiceProviderService {
 
   deleteContact(spContactId: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/oracle/InactivateSPContact/${spContactId}`, null);
+  }
+
+  getCarnetSequenceById(id: number): Observable<CarnetSequence[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/oracle/GetCarnetSequence?p_spid=${id}`).pipe(
+      map(response => this.mapToCarnetSequence(response)));
+  }
+
+  createCarnetSequence(data: CarnetSequence): Observable<any> {
+
+    const carnetSequence = {
+      p_spid: data.spid,
+      p_regionid: data.region,
+      p_startnumber: data.startNumber,
+      p_endnumber: data.endNumber,
+      p_carnettype: data.carnetType
+    }
+
+    return this.http.post(`${this.apiUrl}/oracle/CreateCarnetSequence`, carnetSequence);
+  }
+
+  private mapToCarnetSequence(data: any[]): CarnetSequence[] {
+    return data.map(item => ({
+      spid: item.SPID,
+      region: item.REGIONID,
+      carnetType: item.CARNETTYPE,
+      startNumber: item.STARTNUMBER,
+      endNumber: item.ENDNUMBER,
+      lastNumber: item.LASTNUMBER
+    }));
   }
 }

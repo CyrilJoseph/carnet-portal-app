@@ -1,7 +1,7 @@
 export interface BasicDetail {
-    cargoSurety: any;
-    CargoPolicyNo: any;
-    bondSurety: any;
+    cargoSurety: string;
+    cargoPolicyNo: string;
+    bondSurety: string;
     spid: number;
     companyName: string;
     lookupCode?: string;

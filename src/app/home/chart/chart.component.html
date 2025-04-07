@@ -1,0 +1,17 @@
+<div class="dashboard-chart-container">
+
+    <div *ngIf="!chartData || chartData.length === 0" class="no-data">
+        <mat-icon>pie_chart</mat-icon>
+        <p>No carnet data available</p>
+    </div>
+
+    <div class="charts-grid">
+        <div *ngFor="let config of chartConfigs" class="chart-card">
+            <div class="chart-wrapper">
+                <canvas baseChart [data]="config.data" [options]="config.options" [type]="chartType"
+                    [plugins]="chartPlugins">
+                </canvas>
+            </div>
+        </div>
+    </div>
+</div>

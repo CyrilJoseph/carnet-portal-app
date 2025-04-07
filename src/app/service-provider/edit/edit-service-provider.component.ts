@@ -4,10 +4,11 @@ import { MatAccordion } from '@angular/material/expansion';
 import { BasicDetailsComponent } from '../basic-details/basic-details.component';
 import { ContactsComponent } from '../contacts/contacts.component';
 import { ActivatedRoute } from '@angular/router';
+import { CarnetSequenceComponent } from '../carnet-sequence/carnet-sequence.component';
 
 @Component({
   selector: 'app-edit-service-provider',
-  imports: [AngularMaterialModule, BasicDetailsComponent, ContactsComponent],
+  imports: [AngularMaterialModule, BasicDetailsComponent, ContactsComponent, CarnetSequenceComponent],
   templateUrl: './edit-service-provider.component.html',
   styleUrl: './edit-service-provider.component.scss'
 })

@@ -45,11 +45,11 @@ export class LoginComponent {
       this.authService.login(username, password).subscribe({
         next: (response) => {
           this.isLoading = false;
-          if (response?.error) {
-            this.errorMessage = response.error;
-          } else {
+          if (response?.msg) {
             this.userService.setUser(username);
             this.router.navigate(['/home']);
+          } else {
+            this.errorMessage = response?.error ?? response?.msg;
           }
         },
         error: (error) => {

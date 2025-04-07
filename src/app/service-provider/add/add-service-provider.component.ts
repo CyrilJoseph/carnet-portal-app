@@ -26,6 +26,10 @@ export class AddServiceProviderComponent {
     this.currentStep = 1; // Move to next step
   }
 
+  onContactsSaved(event: boolean): void {
+    this.contactsCompleted = event;
+  }
+
   onStepChange(event: StepperSelectionEvent): void {
     this.currentStep = event.selectedIndex;
   }

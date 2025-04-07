@@ -16,7 +16,7 @@ export class CommonService {
 
   // Lookup APIs
   getCountries(): Observable<Country[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/oracle/GetParamValues?type=002`).pipe(
+    return this.http.get<any[]>(`${this.apiUrl}/oracle/GetParamValues?P_PARAMTYPE=002`).pipe(
       map((response) =>
         response.map((item) => ({
           name: item.PARAMDESC,
@@ -28,7 +28,7 @@ export class CommonService {
   }
 
   getStates(country: string): Observable<State[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/oracle/GetParamValues?type=001`).pipe(
+    return this.http.get<any[]>(`${this.apiUrl}/oracle/GetParamValues?P_PARAMTYPE=001`).pipe(
       map((response) =>
         response.map((item) => ({
           name: item.PARAMDESC,

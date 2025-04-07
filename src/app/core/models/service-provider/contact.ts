@@ -1,7 +1,7 @@
 export interface Contact {
     spContactId: number,
     serviceProviderId: number,
-    defaultContact: string,
+    defaultContact: boolean,
     firstName: string,
     lastName: string,
     middleInitial: string,

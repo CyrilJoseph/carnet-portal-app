@@ -1,0 +1,88 @@
+@import 'colors';
+@import 'mixins';
+
+.dashboard-chart-container {
+    padding: 24px 0px;
+    margin-bottom: 24px;
+
+    .charts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 24px;
+        
+    }
+
+    .chart-card {
+        background: #fff;
+        border-radius: 8px;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+
+        .chart-wrapper {
+            position: relative;
+            height: 250px;
+            min-height: 250px;
+        }
+
+        .chart-legend {
+            margin-top: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 16px;
+            justify-content: center;
+
+            .legend-item {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+
+                .legend-color {
+                    display: inline-block;
+                    width: 12px;
+                    height: 12px;
+                    border-radius: 2px;
+                }
+
+                .legend-label {
+                    font-size: 12px;
+                    color: rgba(0, 0, 0, 0.87);
+                }
+            }
+        }
+    }
+
+    .no-data {
+        height: 300px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: rgba(0, 0, 0, 0.54);
+
+        mat-icon {
+            font-size: 48px;
+            width: 48px;
+            height: 48px;
+            margin-bottom: 16px;
+            color: rgba(0, 0, 0, 0.24);
+        }
+
+        p {
+            margin: 0;
+        }
+    }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+    .dashboard-chart-container {
+        padding: 16px;
+
+        .charts-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+}

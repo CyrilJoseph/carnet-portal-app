@@ -8,8 +8,8 @@ import { EditServiceProviderComponent } from './service-provider/edit/edit-servi
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
-  { path: 'service-provider/:id', component: EditServiceProviderComponent },
-  { path: 'add-service-provider', component: AddServiceProviderComponent },
+  { path: 'service-provider/:id', component: EditServiceProviderComponent, canActivate: [AuthGuard] },
+  { path: 'add-service-provider', component: AddServiceProviderComponent, canActivate: [AuthGuard] },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/home' }
 ];

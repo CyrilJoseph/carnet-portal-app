@@ -8,39 +8,39 @@
 
             <app-basic-details [isEditMode]="isEditMode" (spidCreated)="onBasicDetailsSaved($event)">
             </app-basic-details>
-
+            <!-- 
             <div class="step-actions">
                 <button mat-raised-button color="primary" [disabled]="!serviceProviderId" (click)="currentStep = 1">
                     Next
                 </button>
-            </div>
+            </div> -->
         </mat-step>
 
         <!-- Contacts Step -->
-        <mat-step [completed]="contactsCompleted" [editable]="!!serviceProviderId">
+        <mat-step [completed]="contactsCompleted" [editable]="!!serviceProviderId && basicDetailsCompleted">
             <ng-template matStepLabel>Contacts</ng-template>
 
-            <app-contacts *ngIf="serviceProviderId" [spid]="serviceProviderId">
+            <app-contacts *ngIf="serviceProviderId" [spid]="serviceProviderId" (hasContacts)="onContactsSaved($event)">
             </app-contacts>
 
-            <div class="step-actions">
+            <!-- <div class="step-actions">
                 <button mat-button (click)="currentStep = 0">Back</button>
                 <button mat-raised-button color="primary" [disabled]="!serviceProviderId">
                     Next
                 </button>
-            </div>
+            </div> -->
         </mat-step>
 
         <!-- Carnet Sequence Step -->
-        <mat-step [editable]="!!serviceProviderId">
+        <mat-step [editable]="!!serviceProviderId && contactsCompleted">
             <ng-template matStepLabel>Carnet Sequence</ng-template>
 
-            <div class="step-actions">
+            <!-- <div class="step-actions">
                 <button mat-button (click)="currentStep = 1">Back</button>
                 <button mat-raised-button color="primary" [disabled]="!serviceProviderId">
                     Next
                 </button>
-            </div>
+            </div> -->
         </mat-step>
     </mat-stepper>
 </div>
