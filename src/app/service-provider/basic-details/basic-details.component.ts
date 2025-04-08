@@ -11,6 +11,7 @@ import { AngularMaterialModule } from '../../shared/module/angular-material.modu
 import { CommonModule } from '@angular/common';
 import { ServiceProviderService } from '../../core/services/service-provider.service';
 import { NotificationService } from '../../core/services/notification.service';
+import { ZipCodeValidator } from '../../shared/validators/zipcode-validator';
 
 @Component({
   selector: 'app-basic-details',
@@ -21,10 +22,6 @@ import { NotificationService } from '../../core/services/notification.service';
 export class BasicDetailsComponent implements OnInit, OnDestroy {
   @Input() isEditMode = false;
   @Input() spid: number = 0;
-
-  // @Output() formReady = new EventEmitter<FormGroup>();
-  // @Output() validityChange = new EventEmitter<boolean>();
-  // @Output() valueChange = new EventEmitter<BasicDetail>();
   @Output() spidCreated = new EventEmitter<string>();
 
   basicDetailsForm: FormGroup;
@@ -47,25 +44,6 @@ export class BasicDetailsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadLookupData();
 
-    // Emit the form when it's ready
-    // this.formReady.emit(this.basicDetailsForm);
-
-    // Listen for validity changes
-    // this.basicDetailsForm.statusChanges
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe(() => {
-    //     this.validityChange.emit(this.basicDetailsForm.valid);
-    //   });
-
-    // Listen for value changes
-    // this.basicDetailsForm.valueChanges
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe(values => {
-    //     if (this.basicDetailsForm.valid) {
-    //       this.valueChange.emit(this.prepareOutputData(values));
-    //     }
-    //   });
-
     // Patch edit form data
     if (this.spid > 0) {
       this.serviceProviderService.getBasicDetailsById(this.spid).subscribe({
@@ -76,9 +54,9 @@ export class BasicDetailsComponent implements OnInit, OnDestroy {
           this.isLoading = false;
         },
         error: (error: any) => {
-          this.notificationService.showError('Failed to load contacts');
+          this.notificationService.showError('Failed to load basic details');
           this.isLoading = false;
-          console.error('Error loading contacts:', error);
+          console.error('Error loading basic details:', error);
         }
       });
     }
@@ -98,25 +76,26 @@ export class BasicDetailsComponent implements OnInit, OnDestroy {
       city: ['', [Validators.required, Validators.maxLength(50)]],
       country: ['', Validators.required],
       state: ['', Validators.required],
-      zip: ['', [Validators.required, Validators.pattern(/^\d{5}(?:[-\s]\d{4})?$/)]],
+      zip: ['', [Validators.required, ZipCodeValidator('country')]],
       issuingRegion: ['', Validators.required],
       replacementRegion: ['', Validators.required]
     });
   }
 
   loadLookupData(): void {
-    this.commonService.getCountries()
+    this.commonService.getCountries(this.spid)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (countries) => {
           this.countries = countries;
-          this.loadRegions();
         },
         error: (error) => {
           console.error('Failed to load countries', error);
           this.isLoading = false;
         }
       });
+
+    this.loadRegions();
   }
 
   loadRegions(): void {
@@ -136,7 +115,7 @@ export class BasicDetailsComponent implements OnInit, OnDestroy {
 
   loadStates(country: string): void {
     this.isLoading = true;
-    this.commonService.getStates(country)
+    this.commonService.getStates(country, this.spid)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (states) => {
@@ -167,6 +146,11 @@ export class BasicDetailsComponent implements OnInit, OnDestroy {
     if (data.country) {
       this.loadStates(data.country);
     }
+
+    if (this.isEditMode) {
+      this.basicDetailsForm.get('issuingRegion')?.disable();
+      this.basicDetailsForm.get('replacementRegion')?.disable();
+    }
   }
 
   onCountryChange(country: string): void {
@@ -178,23 +162,9 @@ export class BasicDetailsComponent implements OnInit, OnDestroy {
     } else {
       this.basicDetailsForm.get('state')?.disable();
     }
-  }
 
-  // prepareOutputData(formValues: any): BasicDetail {
-  //   return {
-  //     companyName: formValues.companyName,
-  //     lookupCode: formValues.lookupCode,
-  //     address1: formValues.address1,
-  //     address2: formValues.address2,
-  //     city: formValues.city,
-  //     country: formValues.country,
-  //     state: formValues.state,
-  //     zip: formValues.zip,
-  //     issuingRegion: formValues.issuingRegion,
-  //     replacementRegion: formValues.replacementRegion,
-  //     spid: this.spid
-  //   };
-  // }
+    this.basicDetailsForm.get('zip')?.updateValueAndValidity();
+  }
 
   // Convenience getter for easy access to form fields
   get f() {

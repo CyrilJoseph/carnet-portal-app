@@ -181,7 +181,7 @@ export class CarnetSequenceComponent implements OnInit {
     const sequenceData = {
       ...this.sequenceForm.value,
       spid: this.spid,
-      lastNumber: this.sequenceForm.value.startNumber
+   //   lastNumber: this.sequenceForm.value.startNumber
     };
 
     this.serviceProviderService.createCarnetSequence(sequenceData)
@@ -225,12 +225,12 @@ export class CarnetSequenceComponent implements OnInit {
   //   });
   // }
 
-  // cancelEdit(): void {
-  //   this.showForm = false;
-  //   this.isEditing = false;
-  //   this.currentSequenceId = null;
-  //   this.sequenceForm.reset({ carnetType: 'ORIGINAL' });
-  // }
+  cancelEdit(): void {
+    this.showForm = false;
+    this.isEditing = false;
+    this.currentSequenceId = null;
+    this.sequenceForm.reset({ carnetType: 'ORIGINAL' });
+  }
 
   getCarnetTypeLabel(type: string): string {
     return this.carnetTypes.find(t => t.value === type)?.label || type;
@@ -238,21 +238,5 @@ export class CarnetSequenceComponent implements OnInit {
 
   getRegionLabel(type: number): string {
     return this.regions.find(t => t.id === type)?.regionname || type.toString();
-  }
-
-  get carnetTypeControl() {
-    return this.sequenceForm.get('carnetType');
-  }
-
-  get regionControl() {
-    return this.sequenceForm.get('region');
-  }
-
-  get startNumberControl() {
-    return this.sequenceForm.get('startNumber');
-  }
-
-  get endNumberControl() {
-    return this.sequenceForm.get('endNumber');
   }
 }

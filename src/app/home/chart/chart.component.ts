@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
+import { ChartConfiguration, ChartData, ChartEvent, ChartType } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { AngularMaterialModule } from '../../shared/module/angular-material.module';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-chart',
@@ -12,6 +13,21 @@ import { AngularMaterialModule } from '../../shared/module/angular-material.modu
 })
 export class ChartComponent {
   @Input() chartData: any[] = [];
+
+  constructor(private router: Router) { }
+
+  navigateToManageProvider(spid: number): void {
+    this.router.navigate(['/service-provider', spid]);
+  }
+
+  public chartClicked({ event, active }: { event?: ChartEvent, active?: any[] }): void {
+
+    // if (active && active?.length > 0) {
+    //   console.log(event);
+    //   // You can add custom logic here for what happens when a segment is clicked
+    //   // For example: this.router.navigate(['/carnets', label]);
+    // }
+  }
 
   public chartOptions: ChartConfiguration['options'] = {
     responsive: true,
@@ -39,18 +55,6 @@ export class ChartComponent {
           }
         }
       },
-      title: {
-        display: true,
-        text: '',
-        font: {
-          size: 14,
-          weight: 500
-        },
-        padding: {
-          top: 10,
-          bottom: 20
-        }
-      }
     }
   };
 
@@ -58,6 +62,8 @@ export class ChartComponent {
   public chartPlugins = [];
 
   public chartConfigs: {
+    title: string,
+    spid: number,
     data: ChartData<'pie'>;
     colors: string[];
     options: ChartConfiguration['options'];
@@ -78,6 +84,8 @@ export class ChartComponent {
       });
 
       return {
+        title: provider.Service_Provider_Name,
+        spid: provider.SPID,
         data: {
           labels: provider.CARNETSTATUS,
           datasets: [{
@@ -89,20 +97,10 @@ export class ChartComponent {
           }]
         },
         colors: statusColors,
-        options: {
-          ...this.chartOptions,
-          plugins: {
-            ...this.chartOptions?.plugins,
-            title: {
-              ...this.chartOptions?.plugins?.title,
-              text: provider.Service_Provider_Name,
-            }
-          }
-        }
+        options: this.chartOptions
       };
     });
   }
-
 
   private adjustBrightness(color: string, percent: number): string {
     // Helper function to adjust color brightness

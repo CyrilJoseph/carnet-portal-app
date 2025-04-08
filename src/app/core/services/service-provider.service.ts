@@ -39,27 +39,6 @@ export class ServiceProviderService {
     };
   }
 
-  getContactsById(id: number): Observable<Contact[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/oracle/GetSPAllContacts?p_SPid=${id}`).pipe(
-      map(response => this.mapToContacts(response)));
-  }
-
-  private mapToContacts(data: any[]): Contact[] {
-    return data.map(contact => ({
-      spContactId: contact.SPCONTACTID,
-      serviceProviderId: contact.SPID,
-      defaultContact: contact.DEFCONTACTFLAG === 'Y',
-      firstName: contact.FIRSTNAME,
-      lastName: contact.LASTNAME,
-      title: contact.TITLE,
-      phone: contact.PHONENO,
-      mobile: contact.MOBILENO,
-      fax: contact.FAXNO || null,
-      email: contact.EMAILADDRESS,
-      middleInitial: contact.MIDDLEINITIAL || null
-    }));
-  }
-
   createBasicDetails(data: BasicDetail): Observable<any> {
 
     const basicDetails = {
@@ -100,11 +79,30 @@ export class ServiceProviderService {
       // p_cargopolicyno: data.cargoPolicyNo,
       // p_cargosurety: data.cargoSurety,
       p_user_id: this.userService.getUser(),
-      // P_NOTES: string,
-      // P_FILEIDS: string
     }
 
     return this.http.put(`${this.apiUrl}/oracle/UpdateServiceProvider`, basicDetails);
+  }
+
+  getContactsById(id: number): Observable<Contact[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/oracle/GetSPAllContacts?p_SPid=${id}`).pipe(
+      map(response => this.mapToContacts(response)));
+  }
+
+  private mapToContacts(data: any[]): Contact[] {
+    return data.map(contact => ({
+      spContactId: contact.SPCONTACTID,
+      serviceProviderId: contact.SPID,
+      defaultContact: contact.DEFCONTACTFLAG === 'Y',
+      firstName: contact.FIRSTNAME,
+      lastName: contact.LASTNAME,
+      title: contact.TITLE,
+      phone: contact.PHONENO,
+      mobile: contact.MOBILENO,
+      fax: contact.FAXNO || null,
+      email: contact.EMAILADDRESS,
+      middleInitial: contact.MIDDLEINITIAL || null
+    }));
   }
 
   createContact(spid: number, data: Contact): Observable<any> {
@@ -154,6 +152,17 @@ export class ServiceProviderService {
       map(response => this.mapToCarnetSequence(response)));
   }
 
+  private mapToCarnetSequence(data: any[]): CarnetSequence[] {
+    return data.map(item => ({
+      spid: item.SPID,
+      region: item.REGIONID,
+      carnetType: item.CARNETTYPE,
+      startNumber: item.STARTNUMBER,
+      endNumber: item.ENDNUMBER,
+      lastNumber: item.LASTNUMBER
+    }));
+  }
+
   createCarnetSequence(data: CarnetSequence): Observable<any> {
 
     const carnetSequence = {
@@ -165,16 +174,5 @@ export class ServiceProviderService {
     }
 
     return this.http.post(`${this.apiUrl}/oracle/CreateCarnetSequence`, carnetSequence);
-  }
-
-  private mapToCarnetSequence(data: any[]): CarnetSequence[] {
-    return data.map(item => ({
-      spid: item.SPID,
-      region: item.REGIONID,
-      carnetType: item.CARNETTYPE,
-      startNumber: item.STARTNUMBER,
-      endNumber: item.ENDNUMBER,
-      lastNumber: item.LASTNUMBER
-    }));
   }
 }

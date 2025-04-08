@@ -1,9 +1,8 @@
 <div class="basic-details-container">
     <mat-card class="details-card mat-elevation-z4">
         <mat-card-content>
-            <div class="loading-overlay" *ngIf="isLoading">
+            <div class="loading-shade" *ngIf="isLoading">
                 <mat-spinner diameter="50"></mat-spinner>
-                <div class="loading-text">Loading data...</div>
             </div>
 
             <form [formGroup]="basicDetailsForm" class="details-form" *ngIf="!isLoading"
@@ -83,7 +82,7 @@
 
                     <mat-form-field appearance="outline" class="state">
                         <mat-label>State/Province</mat-label>
-                        <mat-select formControlName="state" required [disabled]="!f['country'].value">
+                        <mat-select formControlName="state" required>
                             <mat-option *ngFor="let state of states" [value]="state.value">
                                 {{ state.name }}
                             </mat-option>
@@ -97,10 +96,15 @@
                         <mat-label>ZIP/Postal Code</mat-label>
                         <input matInput formControlName="zip" required>
                         <mat-error *ngIf="f['zip'].errors?.['required']">
-                            ZIP code is required
+                            ZIP/Postal code is required
                         </mat-error>
-                        <mat-error *ngIf="f['zip'].errors?.['pattern']">
-                            Please enter a valid ZIP code
+                        <mat-error
+                            *ngIf="f['country']?.value === 'US' && f['zip']?.touched && f['zip']?.errors?.['invalidUSZip']">
+                            Please enter a valid 5-digit US ZIP code
+                        </mat-error>
+                        <mat-error
+                            *ngIf="f['country']?.value === 'CA' && f['zip']?.touched && f['zip']?.errors?.['invalidCanadaPostal']">
+                            Please enter a valid postal code (e.g., A1B2C3)
                         </mat-error>
                     </mat-form-field>
                 </div>
@@ -109,7 +113,7 @@
                 <div class="form-row">
                     <mat-form-field appearance="outline" class="issuing-region">
                         <mat-label>Issuing Region</mat-label>
-                        <mat-select formControlName="issuingRegion" required [disabled]="isEditMode">
+                        <mat-select formControlName="issuingRegion" required>
                             <mat-option *ngFor="let region of regions" [value]="region.region">
                                 {{ region.regionname }}
                             </mat-option>
@@ -121,7 +125,7 @@
 
                     <mat-form-field appearance="outline" class="replacement-region">
                         <mat-label>Replacement Region</mat-label>
-                        <mat-select formControlName="replacementRegion" [disabled]="isEditMode" required>
+                        <mat-select formControlName="replacementRegion" required>
                             <mat-option *ngFor="let region of regions" [value]="region.region">
                                 {{ region.regionname }}
                             </mat-option>

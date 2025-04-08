@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { HomeService } from '../core/services/home.service';
 import { AngularMaterialModule } from '../shared/module/angular-material.module';
 import { ChartComponent } from './chart/chart.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-home',
-  imports: [AngularMaterialModule, ChartComponent],
+  imports: [AngularMaterialModule, ChartComponent, RouterLink],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })

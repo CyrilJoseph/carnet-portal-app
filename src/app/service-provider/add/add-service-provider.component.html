@@ -8,12 +8,6 @@
 
             <app-basic-details [isEditMode]="isEditMode" (spidCreated)="onBasicDetailsSaved($event)">
             </app-basic-details>
-            <!-- 
-            <div class="step-actions">
-                <button mat-raised-button color="primary" [disabled]="!serviceProviderId" (click)="currentStep = 1">
-                    Next
-                </button>
-            </div> -->
         </mat-step>
 
         <!-- Contacts Step -->
@@ -22,25 +16,22 @@
 
             <app-contacts *ngIf="serviceProviderId" [spid]="serviceProviderId" (hasContacts)="onContactsSaved($event)">
             </app-contacts>
-
-            <!-- <div class="step-actions">
-                <button mat-button (click)="currentStep = 0">Back</button>
-                <button mat-raised-button color="primary" [disabled]="!serviceProviderId">
-                    Next
-                </button>
-            </div> -->
         </mat-step>
 
         <!-- Carnet Sequence Step -->
-        <mat-step [editable]="!!serviceProviderId && contactsCompleted">
+        <mat-step [editable]="!!serviceProviderId && contactsCompleted" [completed]="carnetSequenceCompleted">
             <ng-template matStepLabel>Carnet Sequence</ng-template>
 
-            <!-- <div class="step-actions">
-                <button mat-button (click)="currentStep = 1">Back</button>
-                <button mat-raised-button color="primary" [disabled]="!serviceProviderId">
-                    Next
-                </button>
-            </div> -->
+            <app-carnet-sequence *ngIf="serviceProviderId" [spid]="serviceProviderId"
+                (hasCarnetSequence)="onCarnetSequenceSaved($event)"></app-carnet-sequence>
+        </mat-step>
+
+        <!-- Fees & Commission Step -->
+        <mat-step [editable]="!!serviceProviderId && carnetSequenceCompleted" [completed]="feeCommissionCompleted">
+            <ng-template matStepLabel>Carnet Fee & Commission Setup</ng-template>
+<!-- 
+            <app-carnet-sequence *ngIf="serviceProviderId" [spid]="serviceProviderId"
+                (hasCarnetSequence)="onCarnetSequenceSaved($event)"></app-carnet-sequence> -->
         </mat-step>
     </mat-stepper>
 </div>

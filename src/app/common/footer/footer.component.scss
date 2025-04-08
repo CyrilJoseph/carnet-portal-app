@@ -6,9 +6,8 @@
     border-top: 1px solid $divider-color;
     //margin-top: auto; // Pushes footer to bottom
     backdrop-filter: blur(10px);
-    
     background-color: rgba($background-header, 0.9);
-    
+
     /* Fixed footer styles */
     position: fixed;
     bottom: 0;

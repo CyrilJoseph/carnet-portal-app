@@ -22,9 +22,8 @@ export class AppComponent {
 
   ngOnInit(): void {
 
-    // Initial load
     this.isUserLoggedIn = this.userService.isLoggedIn();
-    // Subscribe to future changes
+
     this.userSubscription = this.userService
       .watchUser()
       .subscribe(userLoggedIn => {

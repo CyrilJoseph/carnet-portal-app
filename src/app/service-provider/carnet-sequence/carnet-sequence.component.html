@@ -1,6 +1,6 @@
 <div class="carnet-sequence-container">
-    <div class="search-bar">
-        <button mat-raised-button color="primary" [hidden]="isEditMode" (click)="addNewSequence()">
+    <div class="actions-bar">
+        <button mat-raised-button color="primary" *ngIf="!isEditMode" (click)="addNewSequence()">
             <mat-icon>add</mat-icon> Add New Sequence
         </button>
     </div>
@@ -77,7 +77,7 @@
             </div>
 
             <div class="form-row">
-                <mat-form-field appearance="outline">
+                <!-- <mat-form-field appearance="outline">
                     <mat-label>Carnet Type</mat-label>
                     <mat-select formControlName="carnetType" required>
                         <mat-option *ngFor="let type of carnetTypes" [value]="type.value">
@@ -87,7 +87,22 @@
                     <mat-error *ngIf="sequenceForm.get('carnetType')?.errors?.['required']">
                         Carnet type is required
                     </mat-error>
-                </mat-form-field>
+                </mat-form-field> -->
+
+                <!-- <mat-form-field appearance="outline"> -->
+                <mat-label>Carnet Type</mat-label>
+                <mat-radio-group formControlName="carnetType" required class="horizontal-group">
+                    <mat-radio-button *ngFor="let type of carnetTypes" [value]="type.value" class="radio-button">
+                        {{ type.label }}
+                    </mat-radio-button>
+                </mat-radio-group>
+                <mat-error *ngIf="sequenceForm.get('carnetType')?.errors?.['required']">
+                    Carnet type is required
+                </mat-error>
+                <!-- </mat-form-field> -->
+            </div>
+
+            <div class="form-row">
 
                 <mat-form-field appearance="outline">
                     <mat-label>Region</mat-label>
@@ -137,7 +152,7 @@
             </mat-error>
 
             <div class="form-actions">
-                <!-- <button mat-button type="button" (click)="cancelEdit()">Cancel</button> -->
+                <button mat-button type="button" (click)="cancelEdit()">Cancel</button>
                 <button mat-raised-button color="primary" type="submit" [disabled]="sequenceForm.invalid">
                     {{ isEditing ? 'Update' : 'Save' }}
                 </button>

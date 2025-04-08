@@ -93,7 +93,7 @@ export class ContactsComponent implements OnInit {
     this.isEditing = false;
     this.currentContactId = null;
     this.contactForm.reset();
-    this.contactForm.patchValue({ defaultContact: false });
+   // this.contactForm.patchValue({ defaultContact: false });
   }
 
   editContact(contact: Contact): void {
@@ -109,7 +109,7 @@ export class ContactsComponent implements OnInit {
       mobile: contact.mobile,
       fax: contact.fax,
       email: contact.email,
-      defaultContact: contact.defaultContact
+    //  defaultContact: contact.defaultContact
     });
   }
 

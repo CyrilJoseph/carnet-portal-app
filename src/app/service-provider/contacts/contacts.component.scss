@@ -20,7 +20,7 @@
         }
     }
 
-    .search-bar {
+    .actions-bar {
         clear: both;
         margin-bottom: -16px;
 
@@ -86,6 +86,7 @@
         mat-paginator {
             border-top: 1px solid rgba(0, 0, 0, 0.12);
             border-radius: 0 0 8px 8px;
+            padding-top: 4px;
         }
     }
 

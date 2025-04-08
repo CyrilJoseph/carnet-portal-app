@@ -20,9 +20,7 @@ export class EditServiceProviderComponent {
   constructor(private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    // Get the ID from the route parameters
     const idParam = this.route.snapshot.paramMap.get('id');
     this.spid = idParam ? parseInt(idParam, 10) : 0;
   }
-
 }
