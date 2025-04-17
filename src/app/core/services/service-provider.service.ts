@@ -6,17 +6,22 @@ import { Contact } from '../models/service-provider/contact';
 import { UserService } from './user.service';
 import { environment } from '../../../environments/environment';
 import { CarnetSequence } from '../models/service-provider/carnet-sequence';
+import { CounterfoilFee } from '../models/service-provider/counterfoil-fee';
+import { ContinuationSheetFee } from '../models/service-provider/continuation-sheet-fee';
+import { ExpeditedFee } from '../models/service-provider/expedited-fee';
+import { SecurityDeposit } from '../models/service-provider/security-deposit';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ServiceProviderService {
   private apiUrl = environment.apiUrl;
+  private apiDb = environment.apiDb;
 
   constructor(private http: HttpClient, private userService: UserService) { }
 
   getBasicDetailsById(id: number): BasicDetail | any {
-    return this.http.get<any[]>(`${this.apiUrl}/oracle/GetSelectedServiceprovider?p_spid=${id}`).pipe(
+    return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetSelectedServiceprovider?p_spid=${id}`).pipe(
       map(response => this.mapToBasicDetail(response)));
   }
 
@@ -58,7 +63,7 @@ export class ServiceProviderService {
       p_user_id: this.userService.getUser(),
     }
 
-    return this.http.post(`${this.apiUrl}/oracle/InsertNewServiceProvider`, basicDetails);
+    return this.http.post(`${this.apiUrl}/${this.apiDb}/InsertNewServiceProvider`, basicDetails);
   }
 
   updateBasicDetails(id: number, data: BasicDetail): Observable<any> {
@@ -81,11 +86,11 @@ export class ServiceProviderService {
       p_user_id: this.userService.getUser(),
     }
 
-    return this.http.put(`${this.apiUrl}/oracle/UpdateServiceProvider`, basicDetails);
+    return this.http.put(`${this.apiUrl}/${this.apiDb}/UpdateServiceProvider`, basicDetails);
   }
 
   getContactsById(id: number): Observable<Contact[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/oracle/GetSPAllContacts?p_SPid=${id}`).pipe(
+    return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetSPAllContacts?p_SPid=${id}`).pipe(
       map(response => this.mapToContacts(response)));
   }
 
@@ -121,7 +126,7 @@ export class ServiceProviderService {
       p_user_id: this.userService.getUser()
     }
 
-    return this.http.post(`${this.apiUrl}/oracle/InsertSPContacts`, contact);
+    return this.http.post(`${this.apiUrl}/${this.apiDb}/InsertSPContacts`, contact);
   }
 
   updateContact(spContactId: number, data: Contact): Observable<any> {
@@ -140,15 +145,15 @@ export class ServiceProviderService {
       p_user_id: this.userService.getUser()
     }
 
-    return this.http.put(`${this.apiUrl}/oracle/UpdateSPContacts`, contact);
+    return this.http.put(`${this.apiUrl}/${this.apiDb}/UpdateSPContacts`, contact);
   }
 
   deleteContact(spContactId: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/oracle/InactivateSPContact/${spContactId}`, null);
+    return this.http.post(`${this.apiUrl}/${this.apiDb}/InactivateSPContact/${spContactId}`, null);
   }
 
   getCarnetSequenceById(id: number): Observable<CarnetSequence[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/oracle/GetCarnetSequence?p_spid=${id}`).pipe(
+    return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetCarnetSequence?p_spid=${id}`).pipe(
       map(response => this.mapToCarnetSequence(response)));
   }
 
@@ -173,6 +178,204 @@ export class ServiceProviderService {
       p_carnettype: data.carnetType
     }
 
-    return this.http.post(`${this.apiUrl}/oracle/CreateCarnetSequence`, carnetSequence);
+    return this.http.post(`${this.apiUrl}/${this.apiDb}/CreateCarnetSequence`, carnetSequence);
   }
+
+  getCounterfoils(spid: number): Observable<CounterfoilFee[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetCfFeeRates?p_spid=${spid}`).pipe(
+      map(response => this.mapToCounterFoilFee(response)));
+  }
+
+  private mapToCounterFoilFee(data: any[]): CounterfoilFee[] {
+    return data.map(item => ({
+      cfFeeSetupId: item.P_CFFEESETUPID,
+      spid: item.SPID,
+      startSets: item.STARTSETS,
+      endSets: item.ENDSETS,
+      customerType: item.CUSTOMERTYPE,
+      carnetType: item.CARNETTYPE,
+      effectiveDate: item.EFFDATE,
+      rate: item.RATE,
+    }));
+  }
+
+  addCounterfoil(spid: number, data: CounterfoilFee): Observable<any> {
+
+    const counterfoilFee = {
+      P_SPID: spid,
+      P_STARTSETS: data.startSets,
+      P_ENDSETS: data.endSets,
+      P_EFFDATE: data.effectiveDate,
+      P_CUSTOMERTYPE: data.customerType,
+      P_CARNETTYPE: data.carnetType,
+      P_RATE: data.rate,
+      P_USERID: this.userService.getUser()
+    }
+
+    return this.http.post<any>(`${this.apiUrl}/${this.apiDb}/CreateCfFee`, counterfoilFee);
+  }
+
+  updateCounterfoil(id: number, data: CounterfoilFee): Observable<any> {
+
+    const counterfoilFee = {
+      P_CFFEESETUPID: id,
+      P_EFFDATE: data.effectiveDate,
+      P_RATE: data.rate,
+      P_USERID: this.userService.getUser()
+    }
+
+    return this.http.put<any>(`${this.apiUrl}/${this.apiDb}//UpdateCfFee`, counterfoilFee);
+  }
+
+  // deleteCounterfoil(id: string): Observable<void> {
+  //   return this.http.delete<void>(`${this.apiUrl}/${this.apiDb}/InactivateSPContact/${id}`);
+  // }
+
+  getContinuationSheets(spid: number): Observable<ContinuationSheetFee[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetCsFeeRates?p_spid=${spid}`).pipe(
+      map(response => this.mapToContinuationSheetFee(response)));
+  }
+
+  private mapToContinuationSheetFee(data: any[]): ContinuationSheetFee[] {
+    return data.map(item => ({
+      csFeeSetupId: item.P_CSFEESETUPID,
+      spid: item.SPID,
+      customerType: item.CUSTOMERTYPE,
+      carnetType: item.CARNETTYPE,
+      effectiveDate: item.EFFDATE,
+      rate: item.RATE,
+    }));
+  }
+
+  addContinuationSheet(spid: number, data: ContinuationSheetFee): Observable<any> {
+
+    const continuationSheet = {
+      P_SPID: spid,
+      P_EFFDATE: data.effectiveDate,
+      P_CUSTOMERTYPE: data.customerType,
+      P_CARNETTYPE: data.carnetType,
+      P_RATE: data.rate,
+      P_USERID: this.userService.getUser()
+    }
+
+    return this.http.post<any>(`${this.apiUrl}/${this.apiDb}/CreateCsFee`, continuationSheet);
+  }
+
+  updateContinuationSheet(id: number, data: ContinuationSheetFee): Observable<any> {
+
+    const continuationSheet = {
+      P_CSFEESETUPID: id,
+      P_EFFDATE: data.effectiveDate,
+      P_RATE: data.rate,
+      P_USERID: this.userService.getUser()
+    }
+
+    return this.http.put<any>(`${this.apiUrl}/${this.apiDb}/UpdateCsFee`, continuationSheet);
+  }
+
+  // deleteContinuationSheet(id: string): Observable<void> {
+  //   return this.http.delete<void>(`${this.apiUrl}/${this.apiDb}/InactivateSPContact/${id}`);
+  // }
+
+  getExpeditedFees(spid: number): Observable<ExpeditedFee[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetEfFeeRates?p_spid=${spid}`).pipe(
+      map(response => this.mapToExpeditedFee(response)));
+  }
+
+  private mapToExpeditedFee(data: any[]): ExpeditedFee[] {
+    return data.map(item => ({
+      expeditedFeeId: item.P_EFFEESETUPID,
+      customerType: item.CUSTOMERTYPE,
+      deliveryType: item.DELIVERYTYPE,
+      startTime: item.STARTTIME,
+      endTime: item.ENDTIME,
+      timeZone: item.TIMEZONE,
+      fee: item.FEES,
+      effectiveDate: item.EFFDATE,
+      spid: item.SPID
+    }));
+  }
+
+  createExpeditedFee(spid: number, data: ExpeditedFee): Observable<any> {
+
+    const expeditedFee = {
+      P_SPID: spid,
+      P_EFFDATE: data.effectiveDate,
+      P_CUSTOMERTYPE: data.customerType,
+      P_DELIVERYTYPE: data.deliveryType,
+      P_TIMEZONE: data.timeZone,
+      P_STARTTIME: data.startTime,
+      P_ENDTIME: data.endTime,
+      P_FEES: data.fee,
+      P_USERID: this.userService.getUser()
+    }
+
+    return this.http.post<any>(`${this.apiUrl}/${this.apiDb}/CreateEfFee`, expeditedFee);
+  }
+
+  updateExpeditedFee(id: number, data: ExpeditedFee): Observable<any> {
+
+    const expeditedFee = {
+      P_EFFEESETUPID: id,
+      P_EFFDATE: data.effectiveDate,
+      P_FEES: data.fee,
+      P_USERID: this.userService.getUser()
+    }
+
+    return this.http.put<any>(`${this.apiUrl}/${this.apiDb}//UpdateEfFee`, expeditedFee);
+  }
+
+  // deleteExpeditedFee(id: string): Observable<void> {
+  //   return this.http.delete<void>(`${this.apiUrl}/${this.apiDb}/InactivateSPContact/${id}`);
+  // }
+
+  getSecurityDeposits(spid: number): Observable<SecurityDeposit[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetSPAllContacts?p_spid=${spid}`).pipe(
+      map(response => this.mapToSecurityDeposit(response)));
+  }
+
+  private mapToSecurityDeposit(data: any[]): SecurityDeposit[] {
+    return data.map(item => ({
+      securityDepositId: item.P_BONDRATESETUPID,
+      holderType: item.HOLDERTYPE,
+      uscibMember: item.USCIBMEMBERFLAG,
+      specialCommodity: item.SPCLCOMMODITY,
+      specialCountry: item.SPCLCOUNTRY,
+      rate: item.RATE,
+      effectiveDate: item.EFFDATE,
+      spid: item.SPID
+    }));
+  }
+
+  createSecurityDeposit(spid: number, data: SecurityDeposit): Observable<any> {
+
+    const securityDeposit = {
+      P_SPID: spid,
+      P_EFFDATE: data.effectiveDate,
+      P_HOLDERTYPE: data.holderType,
+      P_USCIBMEMBERFLAG: data.uscibMember,
+      P_SPCLCOMMODITY: data.specialCommodity,
+      P_SPCLCOUNTRY: data.specialCountry,
+      P_RATE: data.rate,
+      P_USERID: this.userService.getUser()
+    }
+
+    return this.http.post<any>(`${this.apiUrl}/${this.apiDb}/CreateBondRate`, securityDeposit);
+  }
+
+  updateSecurityDeposit(id: number, data: SecurityDeposit): Observable<any> {
+
+    const securityDeposit = {
+      P_BONDRATESETUPID: id,
+      P_EFFDATE: data.effectiveDate,
+      P_RATE: data.rate,
+      P_USERID: this.userService.getUser()
+    }
+
+    return this.http.put<any>(`${this.apiUrl}/${this.apiDb}/UpdateBondRate`, securityDeposit);
+  }
+
+  // deleteSecurityDeposit(id: string): Observable<void> {
+  //   return this.http.delete<void>(`${this.apiUrl}/${this.apiDb}/InactivateSPContact/${id}`);
+  // }
 }

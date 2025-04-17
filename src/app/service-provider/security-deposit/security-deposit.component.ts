@@ -1,0 +1,224 @@
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
+import { AngularMaterialModule } from '../../shared/module/angular-material.module';
+import { NotificationService } from '../../core/services/notification.service';
+import { CommonModule } from '@angular/common';
+import { CustomPaginator } from '../../shared/custom-paginator';
+import { Country } from '../../core/models/country';
+import { Commodity } from '../../core/models/commodity';
+import { ServiceProviderService } from '../../core/services/service-provider.service';
+import { CommonService } from '../../core/services/common.service';
+import { SecurityDeposit } from '../../core/models/service-provider/security-deposit';
+
+@Component({
+  selector: 'app-security-deposit',
+  imports: [AngularMaterialModule, ReactiveFormsModule, CommonModule],
+  templateUrl: './security-deposit.component.html',
+  styleUrl: './security-deposit.component.scss',
+  providers: [{ provide: MatPaginatorIntl, useClass: CustomPaginator }],
+})
+export class SecurityDepositComponent implements OnInit {
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+
+  displayedColumns: string[] = ['holderType', 'uscibMember', 'specialCommodity', 'specialCountry', 'rate', 'effectiveDate', 'actions'];
+  dataSource = new MatTableDataSource<any>();
+  depositForm: FormGroup;
+  isEditing = false;
+  currentDepositId: number | null = null;
+  isLoading = false;
+  showForm = false;
+
+  countries: Country[] = [];
+  commodities: Commodity[] = [];
+
+  @Input() isEditMode = false;
+  @Input() spid: number = 0;
+  @Output() hasSecurityDeposits = new EventEmitter<boolean>();
+
+  holderTypes = [
+    { value: 'CORP', label: 'Corporation' },
+    { value: 'INDIVIDUAL', label: 'Individual' },
+    { value: 'GOVERNMENT', label: 'Government Agency' }
+  ];
+
+  yesNoOptions  = [
+    { value: 'Y', label: 'Yes' },
+    { value: 'N', label: 'No' }
+  ];
+
+  constructor(
+    private fb: FormBuilder,
+    private serviceProviderService: ServiceProviderService,
+    private commonService: CommonService,
+    private notificationService: NotificationService,
+    private dialog: MatDialog
+  ) {
+    this.depositForm = this.fb.group({
+      holderType: ['', Validators.required],
+      uscibMember: ['', Validators.required],
+      specialCommodity: [''],
+      specialCountry: [''],
+      rate: [0, [Validators.required, Validators.min(0)]],
+      effectiveDate: ['', Validators.required]
+    });
+  }
+
+  ngOnInit(): void {
+    this.loadSecurityDeposits();
+    this.loadCountries();
+    this.loadCommodities();
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+  loadSecurityDeposits(): void {
+    this.isLoading = true;
+    this.serviceProviderService.getSecurityDeposits(this.spid).subscribe({
+      next: (deposits) => {
+        this.dataSource.data = deposits;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.notificationService.showError('Failed to load security deposits');
+        this.isLoading = false;
+        console.error('Error loading security deposits:', error);
+      }
+    });
+  }
+
+  loadCountries(): void {
+    this.commonService.getCountries().subscribe({
+      next: (countries) => {
+        this.countries = countries;
+      },
+      error: (error) => {
+        console.error('Error loading countries:', error);
+      }
+    });
+  }
+
+  loadCommodities(): void {
+    this.commonService.getCommodities().subscribe({
+      next: (commodities) => {
+        this.commodities = commodities;
+      },
+      error: (error) => {
+        console.error('Error loading commodities:', error);
+      }
+    });
+  }
+
+  applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  addNewDeposit(): void {
+    this.showForm = true;
+    this.isEditing = false;
+    this.currentDepositId = null;
+    this.depositForm.reset();
+    this.depositForm.patchValue({ rate: 0 });
+  }
+
+  editDeposit(deposit: SecurityDeposit): void {
+    this.showForm = true;
+    this.isEditing = true;
+    this.currentDepositId = deposit.securityDepositId;
+    this.depositForm.patchValue({
+      holderType: deposit.holderType,
+      uscibMember: deposit.uscibMember ? 'Y' : 'N',
+      specialCommodity: deposit.specialCommodity,
+      specialCountry: deposit.specialCountry,
+      rate: deposit.rate,
+      effectiveDate: deposit.effectiveDate
+    });
+  }
+
+  saveDeposit(): void {
+    if (this.depositForm.invalid) {
+      this.depositForm.markAllAsTouched();
+      return;
+    }
+
+    const depositData = {
+      ...this.depositForm.value,
+      uscibMember: this.depositForm.value.uscibMember === 'Y',
+      specialCommodity: this.depositForm.value.specialCommodity || null,
+      specialCountry: this.depositForm.value.specialCountry || null
+    };
+
+    const saveObservable = this.isEditing && this.currentDepositId
+      ? this.serviceProviderService.updateSecurityDeposit(this.currentDepositId, depositData)
+      : this.serviceProviderService.createSecurityDeposit(this.spid, depositData);
+
+    saveObservable.subscribe({
+      next: () => {
+        this.notificationService.showSuccess(`Security deposit ${this.isEditing ? 'updated' : 'added'} successfully`);
+        this.loadSecurityDeposits();
+        this.cancelEdit();
+      },
+      error: (error) => {
+        this.notificationService.showError(`Failed to ${this.isEditing ? 'update' : 'add'} security deposit`);
+        console.error('Error saving security deposit:', error);
+      }
+    });
+  }
+
+  // deleteDeposit(depositId: string): void {
+  //   const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+  //     width: '350px',
+  //     data: {
+  //       title: 'Confirm Delete',
+  //       message: 'Are you sure you want to delete this security deposit?',
+  //       confirmText: 'Delete',
+  //       cancelText: 'Cancel'
+  //     }
+  //   });
+
+  //   dialogRef.afterClosed().subscribe(result => {
+  //     if (result) {
+  //       this.serviceProviderService.deleteSecurityDeposit(depositId).subscribe({
+  //         next: () => {
+  //           this.notificationService.showSuccess('Security deposit deleted successfully');
+  //           this.loadSecurityDeposits();
+  //         },
+  //         error: (error) => {
+  //           this.notificationService.showError('Failed to delete security deposit');
+  //           console.error('Error deleting security deposit:', error);
+  //         }
+  //       });
+  //     }
+  //   });
+  // }
+
+  cancelEdit(): void {
+    this.showForm = false;
+    this.isEditing = false;
+    this.currentDepositId = null;
+    this.depositForm.reset();
+  }
+
+  getHolderTypeLabel(value: string): string {
+    const type = this.holderTypes.find(t => t.value === value);
+    return type ? type.label : value;
+  }
+
+  getCountryName(code: string): string {
+    const country = this.countries.find(c => c.value === code);
+    return country ? country.name : code;
+  }
+}

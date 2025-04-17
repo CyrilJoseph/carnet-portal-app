@@ -9,15 +9,16 @@ import { environment } from '../../../environments/environment';
 })
 export class HomeService {
   private apiUrl = environment.apiUrl;
+  private apiDb = environment.apiDb;
 
   constructor(private http: HttpClient, private userService: UserService) { }
 
   getHomePageDataById(id: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/oracle/GetHomePageData/${id}`);
+    return this.http.get(`${this.apiUrl}/${this.apiDb}/GetHomePageData/${id}`);
   }
 
   getCarnetSummaryData(): Observable<any> {
     const userid = this.userService.getUser();
-    return this.http.get(`${this.apiUrl}/oracle/GetCarnetSummaryData/${userid}`);
+    return this.http.get(`${this.apiUrl}/${this.apiDb}/GetCarnetSummaryData/${userid}`);
   }
 }

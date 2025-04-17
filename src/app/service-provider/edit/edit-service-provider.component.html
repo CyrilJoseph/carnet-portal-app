@@ -23,4 +23,46 @@
         </mat-expansion-panel-header>
         <app-carnet-sequence [spid]="spid" [isEditMode]="isEditMode"></app-carnet-sequence>
     </mat-expansion-panel>
+<!-- 
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+            <mat-panel-title> Carnet Fee & Commission Setup </mat-panel-title>
+        </mat-expansion-panel-header>
+        <app-carnet-fee [spid]="spid" [isEditMode]="isEditMode"></app-carnet-fee>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+            <mat-panel-title> Basic Fee Setup</mat-panel-title>
+        </mat-expansion-panel-header>
+        <app-basic-fee [spid]="spid" [isEditMode]="isEditMode"></app-basic-fee>
+    </mat-expansion-panel> -->
+
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+            <mat-panel-title> Counterfoil Setup</mat-panel-title>
+        </mat-expansion-panel-header>
+        <app-counterfoil-fee [spid]="spid" [isEditMode]="isEditMode"></app-counterfoil-fee>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+            <mat-panel-title> Continuation Sheet Fee Setup </mat-panel-title>
+        </mat-expansion-panel-header>
+        <app-continuation-sheet-fee [spid]="spid" [isEditMode]="isEditMode"></app-continuation-sheet-fee>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+            <mat-panel-title> Expedited Fee Setup</mat-panel-title>
+        </mat-expansion-panel-header>
+        <app-expedited-fee [spid]="spid" [isEditMode]="isEditMode"></app-expedited-fee>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+            <mat-panel-title> Security Deposit </mat-panel-title>
+        </mat-expansion-panel-header>
+        <app-security-deposit [spid]="spid" [isEditMode]="isEditMode"></app-security-deposit>
+    </mat-expansion-panel>
 </mat-accordion>
