@@ -9,9 +9,9 @@ import { State } from '../../core/models/state';
 import { CommonService } from '../../core/services/common.service';
 import { AngularMaterialModule } from '../../shared/module/angular-material.module';
 import { CommonModule } from '@angular/common';
-import { ServiceProviderService } from '../../core/services/service-provider.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { ZipCodeValidator } from '../../shared/validators/zipcode-validator';
+import { BasicDetailService } from '../../core/services/basic-detail.service';
 
 @Component({
   selector: 'app-basic-details',
@@ -35,7 +35,7 @@ export class BasicDetailsComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private commonService: CommonService,
-    private serviceProviderService: ServiceProviderService,
+    private basicDetailService: BasicDetailService,
     private notificationService: NotificationService
   ) {
     this.basicDetailsForm = this.createForm();
@@ -46,7 +46,7 @@ export class BasicDetailsComponent implements OnInit, OnDestroy {
 
     // Patch edit form data
     if (this.spid > 0) {
-      this.serviceProviderService.getBasicDetailsById(this.spid).subscribe({
+      this.basicDetailService.getBasicDetailsById(this.spid).subscribe({
         next: (basicDetail: BasicDetail) => {
           if (basicDetail?.spid > 0) {
             this.patchFormData(basicDetail);
@@ -179,8 +179,8 @@ export class BasicDetailsComponent implements OnInit, OnDestroy {
 
     const basicDetailData = this.basicDetailsForm.value;
     const saveObservable = this.isEditMode && this.spid > 0
-      ? this.serviceProviderService.updateBasicDetails(this.spid, basicDetailData)
-      : this.serviceProviderService.createBasicDetails(basicDetailData);
+      ? this.basicDetailService.updateBasicDetails(this.spid, basicDetailData)
+      : this.basicDetailService.createBasicDetails(basicDetailData);
 
     saveObservable.subscribe({
       next: (basicData: any) => {

@@ -8,9 +8,9 @@ import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/c
 import { NotificationService } from '../../core/services/notification.service';
 import { AngularMaterialModule } from '../../shared/module/angular-material.module';
 import { CommonModule } from '@angular/common';
-import { ServiceProviderService } from '../../core/services/service-provider.service';
 import { CounterfoilFee } from '../../core/models/service-provider/counterfoil-fee';
 import { CustomPaginator } from '../../shared/custom-paginator';
+import { CounterfoilFeeService } from '../../core/services/counterfoil-fee.service';
 
 @Component({
   selector: 'app-counterfoil-fee',
@@ -49,13 +49,13 @@ export class CounterfoilFeeComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private serviceProviderService: ServiceProviderService,
+    private counterfoilFeeService: CounterfoilFeeService,
     private notificationService: NotificationService,
     private dialog: MatDialog
   ) {
     this.counterfoilForm = this.fb.group({
-      customerType: ['', Validators.required],
-      carnetType: ['', Validators.required],
+      customerType: ['PREPARER', Validators.required],
+      carnetType: ['ORIGINAL', Validators.required],
       startSets: ['', [
         Validators.required,
         Validators.pattern('^[0-9]*$'),
@@ -94,7 +94,7 @@ export class CounterfoilFeeComponent implements OnInit {
     if (!this.spid) return;
 
     this.isLoading = true;
-    this.serviceProviderService.getCounterfoils(this.spid)
+    this.counterfoilFeeService.getCounterfoils(this.spid)
       .subscribe({
         next: (
           counterfoils: CounterfoilFee[]) => {
@@ -122,7 +122,10 @@ export class CounterfoilFeeComponent implements OnInit {
     this.showForm = true;
     this.isEditing = false;
     this.currentCounterfoilId = null;
-    this.counterfoilForm.reset();
+    this.counterfoilForm.reset({
+      customerType: 'PREPARER',
+      carnetType: 'ORIGINAL'
+    });
   }
 
   editCounterfoil(counterfoil: any): void {
@@ -137,6 +140,13 @@ export class CounterfoilFeeComponent implements OnInit {
       rate: counterfoil.rate,
       effectiveDate: new Date(counterfoil.effectiveDate)
     });
+
+    if (this.isEditMode) {
+      this.counterfoilForm.get('customerType')?.disable();
+      this.counterfoilForm.get('carnetType')?.disable();
+      this.counterfoilForm.get('startSets')?.disable();
+      this.counterfoilForm.get('endSets')?.disable();
+    }
   }
 
   saveCounterfoil(): void {
@@ -152,8 +162,8 @@ export class CounterfoilFeeComponent implements OnInit {
     };
 
     const saveObservable = this.isEditing && this.currentCounterfoilId
-      ? this.serviceProviderService.updateCounterfoil(this.currentCounterfoilId, counterfoilData)
-      : this.serviceProviderService.addCounterfoil(this.spid, counterfoilData);
+      ? this.counterfoilFeeService.updateCounterfoil(this.currentCounterfoilId, counterfoilData)
+      : this.counterfoilFeeService.addCounterfoil(this.spid, counterfoilData);
 
     saveObservable.subscribe({
       next: () => {
@@ -182,7 +192,7 @@ export class CounterfoilFeeComponent implements OnInit {
 
   //   dialogRef.afterClosed().subscribe(result => {
   //     if (result) {
-  //       this.serviceProviderService.deleteCounterfoil(counterfoilId).subscribe({
+  //       this.counterfoilFeeService.deleteCounterfoil(counterfoilId).subscribe({
   //         next: () => {
   //           this.notificationService.showSuccess('Counterfoil deleted successfully');
   //           this.loadCounterfoils();
@@ -199,7 +209,10 @@ export class CounterfoilFeeComponent implements OnInit {
     this.showForm = false;
     this.isEditing = false;
     this.currentCounterfoilId = null;
-    this.counterfoilForm.reset();
+    this.counterfoilForm.reset({
+      customerType: 'PREPARER',
+      carnetType: 'ORIGINAL'
+    });
   }
 
   getOptionLabel(options: any[], value: string): string {

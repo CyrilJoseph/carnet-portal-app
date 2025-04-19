@@ -1,5 +1,5 @@
 export interface ContinuationSheetFee {
-    csFeeSetupId: number;
+    id: number;
     spid: number;
     rate: number;
     effectiveDate: Date;

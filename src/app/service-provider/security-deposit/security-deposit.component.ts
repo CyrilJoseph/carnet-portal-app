@@ -11,9 +11,9 @@ import { CommonModule } from '@angular/common';
 import { CustomPaginator } from '../../shared/custom-paginator';
 import { Country } from '../../core/models/country';
 import { Commodity } from '../../core/models/commodity';
-import { ServiceProviderService } from '../../core/services/service-provider.service';
 import { CommonService } from '../../core/services/common.service';
 import { SecurityDeposit } from '../../core/models/service-provider/security-deposit';
+import { SecurityDepositService } from '../../core/services/security-deposit.service';
 
 @Component({
   selector: 'app-security-deposit',
@@ -35,7 +35,7 @@ export class SecurityDepositComponent implements OnInit {
   showForm = false;
 
   countries: Country[] = [];
-  commodities: Commodity[] = [];
+  //commodities: Commodity[] = [];
 
   @Input() isEditMode = false;
   @Input() spid: number = 0;
@@ -47,21 +47,21 @@ export class SecurityDepositComponent implements OnInit {
     { value: 'GOVERNMENT', label: 'Government Agency' }
   ];
 
-  yesNoOptions  = [
+  yesNoOptions = [
     { value: 'Y', label: 'Yes' },
     { value: 'N', label: 'No' }
   ];
 
   constructor(
     private fb: FormBuilder,
-    private serviceProviderService: ServiceProviderService,
+    private securityDepositService: SecurityDepositService,
     private commonService: CommonService,
     private notificationService: NotificationService,
     private dialog: MatDialog
   ) {
     this.depositForm = this.fb.group({
-      holderType: ['', Validators.required],
-      uscibMember: ['', Validators.required],
+      holderType: ['CORP', Validators.required],
+      uscibMember: ['Y', Validators.required],
       specialCommodity: [''],
       specialCountry: [''],
       rate: [0, [Validators.required, Validators.min(0)]],
@@ -72,7 +72,7 @@ export class SecurityDepositComponent implements OnInit {
   ngOnInit(): void {
     this.loadSecurityDeposits();
     this.loadCountries();
-    this.loadCommodities();
+  //  this.loadCommodities();
   }
 
   ngAfterViewInit() {
@@ -82,7 +82,7 @@ export class SecurityDepositComponent implements OnInit {
 
   loadSecurityDeposits(): void {
     this.isLoading = true;
-    this.serviceProviderService.getSecurityDeposits(this.spid).subscribe({
+    this.securityDepositService.getSecurityDeposits(this.spid).subscribe({
       next: (deposits) => {
         this.dataSource.data = deposits;
         this.isLoading = false;
@@ -106,16 +106,16 @@ export class SecurityDepositComponent implements OnInit {
     });
   }
 
-  loadCommodities(): void {
-    this.commonService.getCommodities().subscribe({
-      next: (commodities) => {
-        this.commodities = commodities;
-      },
-      error: (error) => {
-        console.error('Error loading commodities:', error);
-      }
-    });
-  }
+  // loadCommodities(): void {
+  //   this.commonService.getCommodities().subscribe({
+  //     next: (commodities) => {
+  //       this.commodities = commodities;
+  //     },
+  //     error: (error) => {
+  //       console.error('Error loading commodities:', error);
+  //     }
+  //   });
+  // }
 
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -130,7 +130,10 @@ export class SecurityDepositComponent implements OnInit {
     this.showForm = true;
     this.isEditing = false;
     this.currentDepositId = null;
-    this.depositForm.reset();
+    this.depositForm.reset({
+      holderType: 'CORP',
+      uscibMember: 'N',
+    });
     this.depositForm.patchValue({ rate: 0 });
   }
 
@@ -146,6 +149,13 @@ export class SecurityDepositComponent implements OnInit {
       rate: deposit.rate,
       effectiveDate: deposit.effectiveDate
     });
+    
+    if (this.isEditMode) {
+      this.depositForm.get('holderType')?.disable();
+      this.depositForm.get('uscibMember')?.disable();
+      this.depositForm.get('specialCommodity')?.disable();
+      this.depositForm.get('specialCountry')?.disable();
+    }
   }
 
   saveDeposit(): void {
@@ -162,8 +172,8 @@ export class SecurityDepositComponent implements OnInit {
     };
 
     const saveObservable = this.isEditing && this.currentDepositId
-      ? this.serviceProviderService.updateSecurityDeposit(this.currentDepositId, depositData)
-      : this.serviceProviderService.createSecurityDeposit(this.spid, depositData);
+      ? this.securityDepositService.updateSecurityDeposit(this.currentDepositId, depositData)
+      : this.securityDepositService.createSecurityDeposit(this.spid, depositData);
 
     saveObservable.subscribe({
       next: () => {
@@ -191,7 +201,7 @@ export class SecurityDepositComponent implements OnInit {
 
   //   dialogRef.afterClosed().subscribe(result => {
   //     if (result) {
-  //       this.serviceProviderService.deleteSecurityDeposit(depositId).subscribe({
+  //       this.securityDepositService.deleteSecurityDeposit(depositId).subscribe({
   //         next: () => {
   //           this.notificationService.showSuccess('Security deposit deleted successfully');
   //           this.loadSecurityDeposits();
@@ -209,7 +219,10 @@ export class SecurityDepositComponent implements OnInit {
     this.showForm = false;
     this.isEditing = false;
     this.currentDepositId = null;
-    this.depositForm.reset();
+    this.depositForm.reset({
+      holderType: 'CORP',
+      uscibMember: 'N',
+    });
   }
 
   getHolderTypeLabel(value: string): string {
@@ -221,4 +234,9 @@ export class SecurityDepositComponent implements OnInit {
     const country = this.countries.find(c => c.value === code);
     return country ? country.name : code;
   }
+
+  // getCommodityName(code: string): string {
+  //   const commodity = this.commodities.find(c => c.value === code);
+  //   return commodity ? commodity.name : code;
+  // }
 }

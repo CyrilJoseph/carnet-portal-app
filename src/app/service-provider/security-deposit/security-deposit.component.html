@@ -1,8 +1,7 @@
 <div class="security-deposit-container">
-    <div class="header">
-        <h2>Security Deposit Configuration</h2>
-        <button mat-raised-button color="primary" (click)="addNewDeposit()">
-            <mat-icon>add</mat-icon> Add New Deposit
+    <div class="actions-bar">
+        <button mat-raised-button color="primary" *ngIf="!isEditMode" (click)="addNewDeposit()">
+            <mat-icon>add</mat-icon> Add New Security Deposit
         </button>
     </div>
 
@@ -89,40 +88,43 @@
             </div>
 
             <div class="form-row">
-                <mat-form-field appearance="outline">
-                    <mat-label>Holder Type</mat-label>
-                    <mat-select formControlName="holderType" required>
-                        <mat-option *ngFor="let type of holderTypes" [value]="type.value">
-                            {{ type.label }}
-                        </mat-option>
-                    </mat-select>
-                    <mat-error *ngIf="depositForm.get('holderType')?.errors?.['required']">
-                        Holder type is required
-                    </mat-error>
-                </mat-form-field>
+                <!-- <mat-form-field appearance="outline"> -->
+                <mat-label>Holder Type</mat-label>
+                <mat-radio-group formControlName="holderType" required class="horizontal-group">
+                    <mat-radio-button *ngFor="let type of holderTypes" [value]="type.value" class="radio-button">
+                        {{ type.label }}
+                    </mat-radio-button>
+                </mat-radio-group>
+                <mat-error *ngIf="depositForm.get('holderType')?.errors?.['required']">
+                    Holder type is required
+                </mat-error>
+                <!-- </mat-form-field> -->
+            </div>
 
-                <mat-form-field appearance="outline">
-                    <mat-label>USCIB Member</mat-label>
-                    <mat-select formControlName="uscibMember" required>
-                        <mat-option *ngFor="let option of yesNoOptions" [value]="option.value">
-                            {{ option.label }}
-                        </mat-option>
-                    </mat-select>
-                    <mat-error *ngIf="depositForm.get('uscibMember')?.errors?.['required']">
-                        USCIB Member status is required
-                    </mat-error>
-                </mat-form-field>
+            <div class="form-row">
+                <!-- <mat-form-field appearance="outline"> -->
+                <mat-label>USCIB Member</mat-label>
+                <mat-radio-group formControlName="uscibMember" required class="horizontal-group">
+                    <mat-radio-button *ngFor="let type of yesNoOptions" [value]="type.value" class="radio-button">
+                        {{ type.label }}
+                    </mat-radio-button>
+                </mat-radio-group>
+                <mat-error *ngIf="depositForm.get('uscibMember')?.errors?.['required']">
+                    USCIB Member status is required
+                </mat-error>
+                <!-- </mat-form-field> -->
             </div>
 
             <div class="form-row">
                 <mat-form-field appearance="outline">
                     <mat-label>Special Commodity</mat-label>
-                    <mat-select formControlName="specialCommodity">
+                    <!-- <mat-select formControlName="specialCommodity">
                         <mat-option>None</mat-option>
                         <mat-option *ngFor="let commodity of commodities" [value]="commodity.value">
                             {{ commodity.name }}
                         </mat-option>
-                    </mat-select>
+                    </mat-select> -->
+                    <input matInput formControlName="specialCommodity">
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
@@ -139,7 +141,7 @@
             <div class="form-row">
                 <mat-form-field appearance="outline">
                     <mat-label>Rate</mat-label>
-                    <input matInput type="number" formControlName="rate" required min="0" step="0.01">
+                    <input matInput type="number" formControlName="rate" required min="0" step="1">
                     <span matPrefix>$&nbsp;</span>
                     <mat-error *ngIf="depositForm.get('rate')?.errors?.['required']">
                         Rate is required

@@ -1,6 +1,6 @@
 <div class="counterfoil-container">
     <div class="actions-bar">
-        <button mat-raised-button color="primary" (click)="addNewCounterfoil()">
+        <button mat-raised-button color="primary" *ngIf="!isEditMode" (click)="addNewCounterfoil()">
             <mat-icon>add</mat-icon> Add New Counterfoil
         </button>
     </div>
@@ -89,31 +89,31 @@
             </div>
 
             <div class="form-row">
-                <mat-form-field appearance="outline">
-                    <mat-label>Customer Type</mat-label>
-                    <mat-radio-group formControlName="customerType" required>
-                        <mat-radio-button *ngFor="let type of customerTypes" [value]="type.value">
-                            {{ type.label }}
-                        </mat-radio-button>
-                    </mat-radio-group>
-                    <mat-error *ngIf="counterfoilForm.get('customerType')?.errors?.['required']">
-                        Customer type is required
-                    </mat-error>
-                </mat-form-field>
+                <!-- <mat-form-field appearance="outline"> -->
+                <mat-label>Customer Type</mat-label>
+                <mat-radio-group formControlName="customerType" required class="horizontal-group">
+                    <mat-radio-button *ngFor="let type of customerTypes" [value]="type.value" class="radio-button">
+                        {{ type.label }}
+                    </mat-radio-button>
+                </mat-radio-group>
+                <mat-error *ngIf="counterfoilForm.get('customerType')?.errors?.['required']">
+                    Customer type is required
+                </mat-error>
+                <!-- </mat-form-field> -->
             </div>
 
             <div class="form-row">
-                <mat-form-field appearance="outline">
-                    <mat-label>Carnet Type</mat-label>
-                    <mat-radio-group formControlName="carnetType" required>
-                        <mat-radio-button *ngFor="let type of carnetTypes" [value]="type.value">
-                            {{ type.label }}
-                        </mat-radio-button>
-                    </mat-radio-group>
-                    <mat-error *ngIf="counterfoilForm.get('carnetType')?.errors?.['required']">
-                        Carnet type is required
-                    </mat-error>
-                </mat-form-field>
+                <!-- <mat-form-field appearance="outline"> -->
+                <mat-label>Carnet Type</mat-label>
+                <mat-radio-group formControlName="carnetType" required class="horizontal-group">
+                    <mat-radio-button *ngFor="let type of carnetTypes" [value]="type.value" class="radio-button">
+                        {{ type.label }}
+                    </mat-radio-button>
+                </mat-radio-group>
+                <mat-error *ngIf="counterfoilForm.get('carnetType')?.errors?.['required']">
+                    Carnet type is required
+                </mat-error>
+                <!-- </mat-form-field> -->
             </div>
 
             <div class="form-row">
@@ -153,7 +153,7 @@
             <div class="form-row">
                 <mat-form-field appearance="outline">
                     <mat-label>Rate</mat-label>
-                    <input matInput formControlName="rate" type="number" step="0.01" required>
+                    <input matInput formControlName="rate" type="number" step="1" required>
                     <span matPrefix>$&nbsp;</span>
                     <mat-error *ngIf="counterfoilForm.get('rate')?.errors?.['required']">
                         Rate is required

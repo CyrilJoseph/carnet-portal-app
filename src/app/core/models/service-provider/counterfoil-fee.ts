@@ -1,5 +1,5 @@
 export interface CounterfoilFee {
-    cfFeeSetupId: number,
+    id: number,
     spid: number,
     startSets: number,
     endSets: number,

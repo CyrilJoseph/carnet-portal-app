@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { CarnetSequence } from '../../core/models/service-provider/carnet-sequence';
 import { Subject, takeUntil } from 'rxjs';
 import { NotificationService } from '../../core/services/notification.service';
-import { ServiceProviderService } from '../../core/services/service-provider.service';
 import { CommonService } from '../../core/services/common.service';
 import { Region } from '../../core/models/region';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
@@ -14,6 +13,7 @@ import { CommonModule } from '@angular/common';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { CustomPaginator } from '../../shared/custom-paginator';
+import { CarnetSequenceService } from '../../core/services/carnet-sequence.service';
 
 @Component({
   selector: 'app-carnet-sequence',
@@ -49,7 +49,7 @@ export class CarnetSequenceComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private serviceProviderService: ServiceProviderService,
+    private carnetSequenceService: CarnetSequenceService,
     private notificationService: NotificationService,
     private commonService: CommonService,
     private dialog: MatDialog
@@ -116,7 +116,7 @@ export class CarnetSequenceComponent implements OnInit {
 
     this.isLoading = true;
 
-    this.serviceProviderService.getCarnetSequenceById(this.spid).subscribe({
+    this.carnetSequenceService.getCarnetSequenceById(this.spid).subscribe({
       next: (carnetSequences: CarnetSequence[]) => {
         // this.sequences = carnetSequences;
         this.isLoading = false;
@@ -143,7 +143,7 @@ export class CarnetSequenceComponent implements OnInit {
       lastNumber: this.sequenceForm.value.startNumber
     };
 
-    this.serviceProviderService.createCarnetSequence(sequenceData).subscribe({
+    this.carnetSequenceService.createCarnetSequence(sequenceData).subscribe({
       next: () => {
         this.notificationService.showSuccess('Sequence added successfully');
         this.loadSequences();
@@ -184,7 +184,7 @@ export class CarnetSequenceComponent implements OnInit {
       //   lastNumber: this.sequenceForm.value.startNumber
     };
 
-    this.serviceProviderService.createCarnetSequence(sequenceData)
+    this.carnetSequenceService.createCarnetSequence(sequenceData)
       .subscribe({
         next: () => {
           this.notificationService.showSuccess('Sequence added successfully');
@@ -212,7 +212,7 @@ export class CarnetSequenceComponent implements OnInit {
 
   //   dialogRef.afterClosed().subscribe(result => {
   //     if (result) {
-  //       this.serviceProviderService.deleteSequence(sequenceId).subscribe({
+  //       this.carnetSequenceService.deleteSequence(sequenceId).subscribe({
   //         next: () => {
   //           this.notificationService.showSuccess('Sequence deleted successfully');
   //           this.loadSequences();

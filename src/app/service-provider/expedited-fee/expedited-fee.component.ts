@@ -7,7 +7,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 import { AngularMaterialModule } from '../../shared/module/angular-material.module';
 import { NotificationService } from '../../core/services/notification.service';
-import { ServiceProviderService } from '../../core/services/service-provider.service';
 import { CommonModule } from '@angular/common';
 import { CustomPaginator } from '../../shared/custom-paginator';
 import { ExpeditedFee } from '../../core/models/service-provider/expedited-fee';
@@ -15,6 +14,7 @@ import { DeliveryType } from '../../core/models/delivery-type';
 import { TimeZone } from '../../core/models/TimeZone';
 import { CommonService } from '../../core/services/common.service';
 import { Subject, takeUntil } from 'rxjs';
+import { ExpeditedFeeService } from '../../core/services/expedited-fee.service';
 
 @Component({
   selector: 'app-expedited-fee',
@@ -51,13 +51,13 @@ export class ExpeditedFeeComponent implements OnInit, OnDestroy {
 
   constructor(
     private fb: FormBuilder,
-    private serviceProviderService: ServiceProviderService,
+    private expeditedFeeService: ExpeditedFeeService,
     private notificationService: NotificationService,
     private commonService: CommonService,
     private dialog: MatDialog
   ) {
     this.feeForm = this.fb.group({
-      customerType: ['', Validators.required],
+      customerType: ['PREPARER', Validators.required],
       deliveryType: ['', Validators.required],
       startTime: ['', Validators.required],
       endTime: ['', Validators.required],
@@ -69,6 +69,7 @@ export class ExpeditedFeeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadExpeditedFees();
+    this.loadLookupData();
   }
 
   ngOnDestroy(): void {
@@ -85,7 +86,7 @@ export class ExpeditedFeeComponent implements OnInit, OnDestroy {
     this.isLoading = true;
 
     // Replace with actual API call
-    this.serviceProviderService.getExpeditedFees(this.spid).subscribe({
+    this.expeditedFeeService.getExpeditedFees(this.spid).subscribe({
       next: (fees: ExpeditedFee[]) => {
         this.dataSource.data = fees;
         this.isLoading = false;
@@ -144,7 +145,9 @@ export class ExpeditedFeeComponent implements OnInit, OnDestroy {
     this.showForm = true;
     this.isEditing = false;
     this.currentFeeId = null;
-    this.feeForm.reset();
+    this.feeForm.reset({
+      customerType: 'PREPARER'
+    });
     this.feeForm.patchValue({ fee: 0 });
   }
 
@@ -161,6 +164,14 @@ export class ExpeditedFeeComponent implements OnInit, OnDestroy {
       fee: fee.fee,
       effectiveDate: fee.effectiveDate
     });
+
+    if (this.isEditMode) {
+      this.feeForm.get('customerType')?.disable();
+      this.feeForm.get('deliveryType')?.disable();
+      this.feeForm.get('startTime')?.disable();
+      this.feeForm.get('endTime')?.disable();
+      this.feeForm.get('timeZone')?.disable();
+    }
   }
 
   saveFee(): void {
@@ -171,8 +182,8 @@ export class ExpeditedFeeComponent implements OnInit, OnDestroy {
 
     const feeData = this.feeForm.value;
     const saveObservable = this.isEditing && this.currentFeeId
-      ? this.serviceProviderService.updateExpeditedFee(this.currentFeeId, feeData)
-      : this.serviceProviderService.createExpeditedFee(this.spid, feeData);
+      ? this.expeditedFeeService.updateExpeditedFee(this.currentFeeId, feeData)
+      : this.expeditedFeeService.createExpeditedFee(this.spid, feeData);
 
     saveObservable.subscribe({
       next: () => {
@@ -200,7 +211,7 @@ export class ExpeditedFeeComponent implements OnInit, OnDestroy {
 
   //   dialogRef.afterClosed().subscribe(result => {
   //     if (result) {
-  //       this.serviceProviderService.deleteExpeditedFee(feeId).subscribe({
+  //       this.expeditedFeeService.deleteExpeditedFee(feeId).subscribe({
   //         next: () => {
   //           this.notificationService.showSuccess('Expedited fee deleted successfully');
   //           this.loadExpeditedFees();
@@ -218,11 +229,23 @@ export class ExpeditedFeeComponent implements OnInit, OnDestroy {
     this.showForm = false;
     this.isEditing = false;
     this.currentFeeId = null;
-    this.feeForm.reset();
+    this.feeForm.reset({
+      customerType: 'PREPARER'
+    });
   }
 
   getCustomerTypeLabel(value: string): string {
     const type = this.customerTypes.find(t => t.value === value);
     return type ? type.label : value;
+  }
+
+  getDeliveryLabel(value: string): string {
+    const delivery = this.deliveryTypes.find(t => t.value === value);
+    return delivery ? delivery.name : value;
+  }
+
+  getTimeZoneLabel(value: string): string {
+    const tz = this.timeZones.find(t => t.value === value);
+    return tz ? tz.name : value;
   }
 }

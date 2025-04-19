@@ -8,9 +8,9 @@ import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/c
 import { NotificationService } from '../../core/services/notification.service';
 import { AngularMaterialModule } from '../../shared/module/angular-material.module';
 import { CommonModule } from '@angular/common';
-import { ServiceProviderService } from '../../core/services/service-provider.service';
 import { of } from 'rxjs';
 import { CustomPaginator } from '../../shared/custom-paginator';
+import { ContinuationSheetFeeService } from '../../core/services/continuation-sheet-fee.service';
 
 @Component({
   selector: 'app-continuation-sheet-fee',
@@ -49,13 +49,13 @@ export class ContinuationSheetFeeComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private serviceProviderService: ServiceProviderService,
+    private continuationSheetFeeService: ContinuationSheetFeeService,
     private notificationService: NotificationService,
     private dialog: MatDialog
   ) {
     this.continuationSheetForm = this.fb.group({
-      customerType: ['', Validators.required],
-      carnetType: ['', Validators.required],
+      customerType: ['PREPARER', Validators.required],
+      carnetType: ['ORIGINAL', Validators.required],
       rate: ['', [
         Validators.required,
         Validators.pattern(/^\d+\.?\d{0,2}$/),
@@ -78,7 +78,7 @@ export class ContinuationSheetFeeComponent implements OnInit {
     if (!this.spid) return;
 
     this.isLoading = true;
-    this.serviceProviderService.getContinuationSheets(this.spid).subscribe({
+    this.continuationSheetFeeService.getContinuationSheets(this.spid).subscribe({
       next: (continuationSheets) => {
         this.dataSource.data = continuationSheets;
         this.isLoading = false;
@@ -104,7 +104,10 @@ export class ContinuationSheetFeeComponent implements OnInit {
     this.showForm = true;
     this.isEditing = false;
     this.currentContinuationSheetId = null;
-    this.continuationSheetForm.reset();
+    this.continuationSheetForm.reset({
+      customerType: 'PREPARER',
+      carnetType: 'ORIGINAL'
+    });
   }
 
   editContinuationSheet(continuationSheet: any): void {
@@ -117,6 +120,11 @@ export class ContinuationSheetFeeComponent implements OnInit {
       rate: continuationSheet.rate,
       effectiveDate: new Date(continuationSheet.effectiveDate)
     });
+
+    if (this.isEditMode) {
+      this.continuationSheetForm.get('customerType')?.disable();
+      this.continuationSheetForm.get('carnetType')?.disable();
+    }
   }
 
   saveContinuationSheet(): void {
@@ -132,8 +140,8 @@ export class ContinuationSheetFeeComponent implements OnInit {
     };
 
     const saveObservable = this.isEditing && this.currentContinuationSheetId
-      ? this.serviceProviderService.updateContinuationSheet(this.currentContinuationSheetId, continuationSheetData)
-      : this.serviceProviderService.addContinuationSheet(this.spid, continuationSheetData);
+      ? this.continuationSheetFeeService.updateContinuationSheet(this.currentContinuationSheetId, continuationSheetData)
+      : this.continuationSheetFeeService.addContinuationSheet(this.spid, continuationSheetData);
 
     saveObservable.subscribe({
       next: () => {
@@ -162,7 +170,7 @@ export class ContinuationSheetFeeComponent implements OnInit {
 
   //   dialogRef.afterClosed().subscribe(result => {
   //     if (result) {
-  //       this.serviceProviderService.deleteContinuationSheet(continuationSheetId).subscribe({
+  //       this.continuationSheetFeeService.deleteContinuationSheet(continuationSheetId).subscribe({
   //         next: () => {
   //           this.notificationService.showSuccess('Continuation sheet deleted successfully');
   //           this.loadContinuationSheets();
@@ -179,7 +187,10 @@ export class ContinuationSheetFeeComponent implements OnInit {
     this.showForm = false;
     this.isEditing = false;
     this.currentContinuationSheetId = null;
-    this.continuationSheetForm.reset();
+    this.continuationSheetForm.reset({
+      customerType: 'PREPARER',
+      carnetType: 'ORIGINAL'
+    });
   }
 
   getOptionLabel(options: any[], value: string): string {

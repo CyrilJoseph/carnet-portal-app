@@ -7,18 +7,18 @@
     flex-direction: column;
     gap: 24px;
 
-    .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 16px;
+    // .header {
+    //     display: flex;
+    //     justify-content: space-between;
+    //     align-items: center;
+    //     margin-bottom: 16px;
 
-        h2 {
-            margin: 0;
-            color: $primary-color;
-            font-weight: 500;
-        }
-    }
+    //     h2 {
+    //         margin: 0;
+    //         color: $primary-color;
+    //         font-weight: 500;
+    //     }
+    // }
 
     .actions-bar {
         clear: both;
@@ -140,11 +140,11 @@
     .contacts-container {
         padding: 16px;
 
-        .header {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 16px;
-        }
+        // .header {
+        //     flex-direction: column;
+        //     align-items: flex-start;
+        //     gap: 16px;
+        // }
 
         .form-row {
             flex-direction: column;

@@ -7,16 +7,25 @@
     flex-direction: column;
     gap: 24px;
 
-    .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 16px;
+    // .header {
+    //     display: flex;
+    //     justify-content: space-between;
+    //     align-items: center;
+    //     margin-bottom: 16px;
 
-        h2 {
-            margin: 0;
-            color: $primary-color;
-            font-weight: 500;
+    //     h2 {
+    //         margin: 0;
+    //         color: $primary-color;
+    //         font-weight: 500;
+    //     }
+    // }
+
+    .actions-bar {
+        clear: both;
+        margin-bottom: -16px;
+
+        button {
+            float: right;
         }
     }
 
@@ -111,11 +120,33 @@
                 }
             }
 
+            .form-error {
+                margin-top: -16px;
+                margin-bottom: 8px;
+                display: block;
+                color: var(--mat-form-field-error-text-color, var(--mat-sys-error));
+                font-size: 12px;
+            }
+
             .form-actions {
                 display: flex;
                 justify-content: flex-end;
                 gap: 16px;
                 margin-top: 16px;
+            }
+
+            .horizontal-group {
+                display: flex;
+                gap: 16px;
+                flex-wrap: wrap;
+            }
+
+            ::ng-deep .mat-radio-button.mat-accent .mat-radio-outer-circle {
+                border-color: #3f51b5;
+            }
+
+            ::ng-deep .mat-radio-button.mat-accent .mat-radio-inner-circle {
+                background-color: #3f51b5;
             }
         }
     }
@@ -125,12 +156,6 @@
 @media (max-width: 768px) {
     .security-deposit-container {
         padding: 16px;
-
-        .header {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 16px;
-        }
 
         .form-row {
             flex-direction: column;

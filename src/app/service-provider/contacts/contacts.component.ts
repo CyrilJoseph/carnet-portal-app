@@ -7,11 +7,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 import { AngularMaterialModule } from '../../shared/module/angular-material.module';
 import { NotificationService } from '../../core/services/notification.service';
-import { ServiceProviderService } from '../../core/services/service-provider.service';
 import { Contact } from '../../core/models/service-provider/contact';
 import { PhonePipe } from '../../shared/pipes/phone.pipe';
 import { CommonModule } from '@angular/common';
 import { CustomPaginator } from '../../shared/custom-paginator';
+import { ContactService } from '../../core/services/contact.service';
 
 @Component({
   selector: 'app-contacts',
@@ -37,7 +37,7 @@ export class ContactsComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private serviceProviderService: ServiceProviderService,
+    private contactService: ContactService,
     private notificationService: NotificationService,
     private dialog: MatDialog
   ) {
@@ -66,7 +66,7 @@ export class ContactsComponent implements OnInit {
   loadContacts(): void {
     this.isLoading = true;
 
-    this.serviceProviderService.getContactsById(this.spid).subscribe({
+    this.contactService.getContactsById(this.spid).subscribe({
       next: (contacts: Contact[]) => {
         this.dataSource.data = contacts;
         this.isLoading = false;
@@ -121,8 +121,8 @@ export class ContactsComponent implements OnInit {
 
     const contactData = this.contactForm.value;
     const saveObservable = this.isEditing && (this.currentContactId! > 0)
-      ? this.serviceProviderService.updateContact(this.currentContactId!, contactData)
-      : this.serviceProviderService.createContact(this.spid, contactData);
+      ? this.contactService.updateContact(this.currentContactId!, contactData)
+      : this.contactService.createContact(this.spid, contactData);
 
     saveObservable.subscribe({
       next: () => {
@@ -151,7 +151,7 @@ export class ContactsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.serviceProviderService.deleteContact(contactId).subscribe({
+        this.contactService.deleteContact(contactId).subscribe({
           next: () => {
             this.notificationService.showSuccess('Contact deleted successfully');
             this.loadContacts();
@@ -173,7 +173,7 @@ export class ContactsComponent implements OnInit {
   }
 
   // setDefaultContact(contactId: string): void {
-  //   this.serviceProviderService.setDefaultServiceProviderContact(this.spid, contactId).subscribe({
+  //   this.contactService.setDefaultServiceProviderContact(this.spid, contactId).subscribe({
   //     next: () => {
   //       this.notificationService.showSuccess('Default contact updated successfully');
   //       this.loadContacts();
