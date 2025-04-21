@@ -1,3 +1,7 @@
+<!-- <div>
+    <h1 class="primary">Add Service Provider</h1>
+</div> -->
+
 <div class="service-provider-container">
     <mat-stepper orientation="vertical" [linear]="true" (selectionChange)="onStepChange($event)"
         [selectedIndex]="currentStep">
@@ -27,19 +31,21 @@
         </mat-step>
 
         <!-- Fees & Commission Step -->
-        <mat-step [editable]="!!serviceProviderId && carnetSequenceCompleted" [completed]="feeCommissionCompleted">
+        <mat-step [editable]="!!serviceProviderId && carnetSequenceCompleted"
+            [completed]="feeCommissionCompleted && carnetSequenceCompleted">
             <ng-template matStepLabel>Carnet Fee & Commission Setup</ng-template>
-            <!-- 
+
             <app-carnet-fee *ngIf="serviceProviderId" [spid]="serviceProviderId"
-                (hasFeeCommission)="onFeeCommissionSaved($event)"></app-carnet-fee> -->
+                (hasFeeCommissions)="onFeeCommissionSaved($event)"></app-carnet-fee>
         </mat-step>
 
         <!-- Basic Fee Step -->
-        <mat-step [editable]="!!serviceProviderId && feeCommissionCompleted" [completed]="basicFeeCompleted">
+        <mat-step [editable]="!!serviceProviderId && feeCommissionCompleted"
+            [completed]="basicFeeCompleted && feeCommissionCompleted">
             <ng-template matStepLabel>Basic Fee Setup</ng-template>
-            <!-- 
+
             <app-basic-fee *ngIf="serviceProviderId" [spid]="serviceProviderId"
-                (hasBasicFee)="onBasicFeeSaved($event)"></app-basic-fee> -->
+                (hasBasicFees)="onBasicFeeSaved($event)"></app-basic-fee>
         </mat-step>
 
         <!-- Counterfoil Fee Step -->

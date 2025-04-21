@@ -28,5 +28,11 @@ export class EditServiceProviderComponent {
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
     this.spid = idParam ? parseInt(idParam, 10) : 0;
+    this.accordion().openAll();
+  }
+
+  ngAfterViewInit() {
+    // Open all panels
+    this.accordion().openAll();
   }
 }

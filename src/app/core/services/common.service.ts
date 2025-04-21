@@ -8,6 +8,7 @@ import { environment } from '../../../environments/environment';
 import { Commodity } from '../models/commodity';
 import { DeliveryType } from '../models/delivery-type';
 import { TimeZone } from '../models/TimeZone';
+import { FeeType } from '../models/fee-type';
 
 @Injectable({
   providedIn: 'root'
@@ -70,7 +71,7 @@ export class CommonService {
       )
     );
   }
-  
+
   getDeliveryTypes(spid: number = 0): Observable<DeliveryType[]> {
     return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetParamValues?P_PARAMTYPE=006&P_SPID=${spid}`).pipe(
       map((response) =>
@@ -82,9 +83,21 @@ export class CommonService {
       )
     );
   }
-  
+
   getTimezones(spid: number = 0): Observable<TimeZone[]> {
     return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetParamValues?P_PARAMTYPE=010&P_SPID=${spid}`).pipe(
+      map((response) =>
+        response.map((item) => ({
+          name: item.PARAMDESC,
+          id: item.PARAMID,
+          value: item.PARAMVALUE
+        }))
+      )
+    );
+  }
+
+  getFeeTypes(spid: number = 0): Observable<FeeType[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetParamValues?P_PARAMTYPE=009&P_SPID=${spid}`).pipe(
       map((response) =>
         response.map((item) => ({
           name: item.PARAMDESC,
