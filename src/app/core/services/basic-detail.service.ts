@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UserService } from './user.service';
 import { BasicDetail } from '../models/service-provider/basic-detail';
-import { map, Observable } from 'rxjs';
+import { filter, map, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -16,7 +16,8 @@ export class BasicDetailService {
 
   getBasicDetailsById(id: number): BasicDetail | any {
     return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetSelectedServiceprovider?p_spid=${id}`).pipe(
-      map(response => this.mapToBasicDetail(response)));
+      filter(response => response.length > 0),
+      map(response => this.mapToBasicDetail(response?.[0])));
   }
 
   private mapToBasicDetail(basicDetails: any): BasicDetail {
@@ -32,9 +33,9 @@ export class BasicDetailService {
       issuingRegion: basicDetails.ISSUINGREGION,
       replacementRegion: basicDetails.REPLACEMENTREGION,
       zip: basicDetails.ZIP,
-      cargoSurety: basicDetails.cargoSurety,
-      cargoPolicyNo: basicDetails.cargoPolicyNo,
-      bondSurety: basicDetails.bondSurety
+      cargoSurety: basicDetails.CARGOSURETY,
+      cargoPolicyNo: basicDetails.CARGOPOLICYNO,
+      bondSurety: basicDetails.BONDSURETY
     };
   }
 

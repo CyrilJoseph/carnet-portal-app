@@ -15,7 +15,7 @@ export class CarnetFeeService {
   constructor(private http: HttpClient, private userService: UserService) { }
 
   getFeeCommissions(spid: number): Observable<CarnetFee[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetFeeComm?p_spid=${spid}`).pipe(
+    return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetFeeComm?P_SPID=${spid}&P_ACTIVE_INACTIVE=ACTIVE`).pipe(
       map(response => this.mapToFeeCommissions(response)));
   }
 

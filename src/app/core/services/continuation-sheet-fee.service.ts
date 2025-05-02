@@ -15,7 +15,7 @@ export class ContinuationSheetFeeService {
   constructor(private http: HttpClient, private userService: UserService) { }
 
   getContinuationSheets(spid: number): Observable<ContinuationSheetFee[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetCsFeeRates?p_spid=${spid}`).pipe(
+    return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetCsFeeRates?P_SPID=${spid}&P_ACTIVE_INACTIVE=ACTIVE`).pipe(
       map(response => this.mapToContinuationSheetFee(response)));
   }
 

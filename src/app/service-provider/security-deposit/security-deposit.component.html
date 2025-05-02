@@ -48,7 +48,7 @@
             <!-- Effective Date Column -->
             <ng-container matColumnDef="effectiveDate">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Effective Date</th>
-                <td mat-cell *matCellDef="let deposit">{{ deposit.effectiveDate | date:'mediumDate' }}</td>
+                <td mat-cell *matCellDef="let deposit">{{ deposit.effectiveDate | date:'mediumDate':'UTC' }}</td>
             </ng-container>
 
             <!-- Actions Column -->

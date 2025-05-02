@@ -120,6 +120,9 @@
         "deploy": {
           "builder": "angular-cli-ghpages:deploy"
         }
+      },
+      "i18n": {
+        "sourceLocale": "en-US"
       }
     }
   },
