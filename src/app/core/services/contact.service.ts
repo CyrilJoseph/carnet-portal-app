@@ -74,7 +74,7 @@ export class ContactService {
   }
 
   deleteContact(spContactId: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/${this.apiDb}/InactivateSPContact/${spContactId}`, null);
+    return this.http.post(`${this.apiUrl}/${this.apiDb}/InactivateSPContact?p_spcontactid=${spContactId}`, null);
   }
 
 }

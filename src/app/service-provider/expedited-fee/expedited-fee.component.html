@@ -26,7 +26,7 @@
             <!-- Time Column -->
             <ng-container matColumnDef="time">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Time</th>
-                <td mat-cell *matCellDef="let fee">{{ fee.startTime }} {{fee.EndTime }}</td>
+                <td mat-cell *matCellDef="let fee">{{ fee.startTime }} - {{fee.endTime }}</td>
             </ng-container>
 
             <!-- Time Zone Column -->
@@ -112,7 +112,7 @@
 
             <div class="form-row">
                 <mat-form-field appearance="outline">
-                    <mat-label>Time</mat-label>
+                    <mat-label>Start Time</mat-label>
                     <input matInput formControlName="startTime" required>
                     <mat-error *ngIf="feeForm.get('startTime')?.errors?.['required']">
                         Start Time is required
@@ -120,7 +120,7 @@
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
-                    <mat-label>Time</mat-label>
+                    <mat-label>End Time</mat-label>
                     <input matInput formControlName="endTime" required>
                     <mat-error *ngIf="feeForm.get('endTime')?.errors?.['required']">
                         End Time is required

@@ -157,8 +157,7 @@ export class CounterfoilFeeComponent implements OnInit {
 
     const counterfoilData = {
       ...this.counterfoilForm.value,
-      spid: this.spid,
-      effectiveDate: this.counterfoilForm.value.effectiveDate.toISOString()
+      spid: this.spid
     };
 
     const saveObservable = this.isEditing && this.currentCounterfoilId

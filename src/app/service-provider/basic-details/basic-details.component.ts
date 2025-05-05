@@ -43,7 +43,7 @@ export class BasicDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadLookupData();
-
+    this.spidCreated.emit(this.spid?.toString());
     // Patch edit form data
     if (this.spid > 0) {
       this.basicDetailService.getBasicDetailsById(this.spid).subscribe({
@@ -78,7 +78,10 @@ export class BasicDetailsComponent implements OnInit, OnDestroy {
       state: ['', Validators.required],
       zip: ['', [Validators.required, ZipCodeValidator('country')]],
       issuingRegion: ['', Validators.required],
-      replacementRegion: ['', Validators.required]
+      replacementRegion: ['', Validators.required],
+      cargoSurety: [''],
+      cargoPolicyNo: [''],
+      bondSurety: ['']
     });
   }
 
@@ -140,7 +143,10 @@ export class BasicDetailsComponent implements OnInit, OnDestroy {
       state: data.state,
       zip: data.zip,
       issuingRegion: data.issuingRegion,
-      replacementRegion: data.replacementRegion
+      replacementRegion: data.replacementRegion,
+      cargoSurety: data.cargoSurety,
+      cargoPolicyNo: data.cargoPolicyNo,
+      bondSurety: data.bondSurety
     });
 
     if (data.country) {
@@ -177,7 +183,17 @@ export class BasicDetailsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const basicDetailData = this.basicDetailsForm.value;
+    const basicDetailData: BasicDetail = this.basicDetailsForm.value;
+
+    if (this.isEditMode) {
+      basicDetailData.issuingRegion = this.basicDetailsForm.get('issuingRegion')?.value;
+      basicDetailData.replacementRegion = this.basicDetailsForm.get('replacementRegion')?.value;
+    }
+    
+    basicDetailData.cargoSurety = basicDetailData.cargoSurety ?? '';
+    basicDetailData.cargoPolicyNo = basicDetailData.cargoPolicyNo ?? '';
+    basicDetailData.bondSurety = basicDetailData.bondSurety ?? '';
+    
     const saveObservable = this.isEditMode && this.spid > 0
       ? this.basicDetailService.updateBasicDetails(this.spid, basicDetailData)
       : this.basicDetailService.createBasicDetails(basicDetailData);
@@ -187,7 +203,7 @@ export class BasicDetailsComponent implements OnInit, OnDestroy {
         this.notificationService.showSuccess(`Basic details ${this.isEditMode ? 'updated' : 'added'} successfully`);
 
         if (!this.isEditMode) {
-          this.spidCreated.emit("24");//basicData.spid);
+          this.spidCreated.emit(basicData.spid);
         }
       },
       error: (error) => {

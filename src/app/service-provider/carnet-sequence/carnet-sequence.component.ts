@@ -178,10 +178,9 @@ export class CarnetSequenceComponent implements OnInit {
       return;
     }
 
-    const sequenceData = {
+    const sequenceData: CarnetSequence = {
       ...this.sequenceForm.value,
-      spid: this.spid,
-      //   lastNumber: this.sequenceForm.value.startNumber
+      spid: this.spid
     };
 
     this.carnetSequenceService.createCarnetSequence(sequenceData)

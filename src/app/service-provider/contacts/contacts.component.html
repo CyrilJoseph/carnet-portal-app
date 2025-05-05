@@ -161,6 +161,9 @@
                     <mat-label>Mobile</mat-label>
                     <input matInput formControlName="mobile">
                     <mat-icon matSuffix>smartphone</mat-icon>
+                    <mat-error *ngIf="contactForm.get('mobile')?.errors?.['required']">
+                        Mobile is required
+                    </mat-error>
                     <mat-error *ngIf="contactForm.get('mobile')?.errors?.['pattern']">
                         Please enter a valid mobile number (10-15 digits)
                     </mat-error>
@@ -172,6 +175,9 @@
                     <mat-label>Fax</mat-label>
                     <input matInput formControlName="fax">
                     <mat-icon matSuffix>fax</mat-icon>
+                    <mat-error *ngIf="contactForm.get('fax')?.errors?.['required']">
+                        Fax is required
+                    </mat-error>
                     <mat-error *ngIf="contactForm.get('fax')?.errors?.['pattern']">
                         Please enter a valid fax number (10-15 digits)
                     </mat-error>

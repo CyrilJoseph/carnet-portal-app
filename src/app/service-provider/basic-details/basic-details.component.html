@@ -136,6 +136,11 @@
                     </mat-form-field>
                 </div>
 
+                <!-- hidden controls for edit-->
+                <input type="hidden" formControlName="cargoSurety">
+                <input type="hidden" formControlName="cargoPolicyNo">
+                <input type="hidden" formControlName="bondSurety">
+                
                 <div class="form-actions">
                     <button mat-raised-button color="primary" type="submit" [disabled]="basicDetailsForm.invalid">
                         Save

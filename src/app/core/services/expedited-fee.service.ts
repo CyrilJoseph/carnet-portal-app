@@ -4,6 +4,7 @@ import { map, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { UserService } from './user.service';
 import { environment } from '../../../environments/environment';
+import { CommonService } from './common.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class ExpeditedFeeService {
   private apiUrl = environment.apiUrl;
   private apiDb = environment.apiDb;
 
-  constructor(private http: HttpClient, private userService: UserService) { }
+  constructor(private http: HttpClient, private userService: UserService, private commonService: CommonService) { }
 
   getExpeditedFees(spid: number): Observable<ExpeditedFee[]> {
     return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetEfFeeRates?P_SPID=${spid}&P_ACTIVE_INACTIVE=ACTIVE`).pipe(
@@ -21,7 +22,7 @@ export class ExpeditedFeeService {
 
   private mapToExpeditedFee(data: any[]): ExpeditedFee[] {
     return data.map(item => ({
-      expeditedFeeId: item.P_EFFEESETUPID,
+      expeditedFeeId: item.EXPFEESETUPID,
       customerType: item.CUSTOMERTYPE,
       deliveryType: item.DELIVERYTYPE,
       startTime: item.STARTTIME,
@@ -37,12 +38,12 @@ export class ExpeditedFeeService {
 
     const expeditedFee = {
       P_SPID: spid,
-      P_EFFDATE: data.effectiveDate,
       P_CUSTOMERTYPE: data.customerType,
       P_DELIVERYTYPE: data.deliveryType,
       P_TIMEZONE: data.timeZone,
-      P_STARTTIME: data.startTime,
-      P_ENDTIME: data.endTime,
+      P_STARTTIME: +data.startTime,
+      P_ENDTIME: +data.endTime,
+      P_EFFDATE: this.commonService.formatUSDate(data.effectiveDate),
       P_FEES: data.fee,
       P_USERID: this.userService.getUser()
     }
@@ -54,7 +55,7 @@ export class ExpeditedFeeService {
 
     const expeditedFee = {
       P_EFFEESETUPID: id,
-      P_EFFDATE: data.effectiveDate,
+      P_EFFDATE: this.commonService.formatUSDate(data.effectiveDate),
       P_FEES: data.fee,
       P_USERID: this.userService.getUser()
     }

@@ -52,9 +52,9 @@ export class BasicDetailService {
       p_country: data.country,
       p_issuingregion: data.issuingRegion,
       p_replacementregion: data.replacementRegion,
-      p_bondsurety: null,
-      p_cargopolicyno: null,
-      p_cargosurety: null,
+      p_bondsurety: data.bondSurety,
+      p_cargopolicyno: data.cargoPolicyNo,
+      p_cargosurety: data.cargoSurety,
       p_user_id: this.userService.getUser(),
     }
 
@@ -75,9 +75,9 @@ export class BasicDetailService {
       p_country: data.country,
       p_issuingregion: data.issuingRegion,
       p_replacementregion: data.replacementRegion,
-      // p_bondsurety: data.bondSurety,
-      // p_cargopolicyno: data.cargoPolicyNo,
-      // p_cargosurety: data.cargoSurety,
+      p_bondsurety: data.bondSurety,
+      p_cargopolicyno: data.cargoPolicyNo,
+      p_cargosurety: data.cargoSurety,
       p_user_id: this.userService.getUser(),
     }
 

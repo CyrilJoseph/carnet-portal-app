@@ -4,6 +4,7 @@ import { UserService } from './user.service';
 import { SecurityDeposit } from '../models/service-provider/security-deposit';
 import { map, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { CommonService } from './common.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class SecurityDepositService {
   private apiUrl = environment.apiUrl;
   private apiDb = environment.apiDb;
 
-  constructor(private http: HttpClient, private userService: UserService) { }
+  constructor(private http: HttpClient, private userService: UserService, private commonService: CommonService) { }
 
   getSecurityDeposits(spid: number): Observable<SecurityDeposit[]> {
     return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetBondRates?P_SPID=${spid}&P_ACTIVE_INACTIVE=ACTIVE`).pipe(
@@ -21,7 +22,7 @@ export class SecurityDepositService {
 
   private mapToSecurityDeposit(data: any[]): SecurityDeposit[] {
     return data.map(item => ({
-      securityDepositId: item.P_BONDRATESETUPID,
+      securityDepositId: item.BONDRATESETUPID,
       holderType: item.HOLDERTYPE,
       uscibMember: item.USCIBMEMBERFLAG,
       specialCommodity: item.SPCLCOMMODITY,
@@ -36,7 +37,7 @@ export class SecurityDepositService {
 
     const securityDeposit = {
       P_SPID: spid,
-      P_EFFDATE: data.effectiveDate,
+      P_EFFDATE: this.commonService.formatUSDate(data.effectiveDate),
       P_HOLDERTYPE: data.holderType,
       P_USCIBMEMBERFLAG: data.uscibMember ? 'Y' : 'N',
       P_SPCLCOMMODITY: data.specialCommodity,
@@ -52,7 +53,7 @@ export class SecurityDepositService {
 
     const securityDeposit = {
       P_BONDRATESETUPID: id,
-      P_EFFDATE: data.effectiveDate,
+      P_EFFDATE: this.commonService.formatUSDate(data.effectiveDate),
       P_RATE: data.rate,
       P_USERID: this.userService.getUser()
     }

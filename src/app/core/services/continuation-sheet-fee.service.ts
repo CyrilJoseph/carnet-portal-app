@@ -4,6 +4,7 @@ import { ContinuationSheetFee } from '../models/service-provider/continuation-sh
 import { map, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
+import { CommonService } from './common.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class ContinuationSheetFeeService {
   private apiUrl = environment.apiUrl;
   private apiDb = environment.apiDb;
 
-  constructor(private http: HttpClient, private userService: UserService) { }
+  constructor(private http: HttpClient, private userService: UserService, private commonService: CommonService) { }
 
   getContinuationSheets(spid: number): Observable<ContinuationSheetFee[]> {
     return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetCsFeeRates?P_SPID=${spid}&P_ACTIVE_INACTIVE=ACTIVE`).pipe(
@@ -21,7 +22,7 @@ export class ContinuationSheetFeeService {
 
   private mapToContinuationSheetFee(data: any[]): ContinuationSheetFee[] {
     return data.map(item => ({
-      id: item.P_CSFEESETUPID,
+      id: item.CSFEESETUPID,
       spid: item.SPID,
       customerType: item.CUSTOMERTYPE,
       carnetType: item.CARNETTYPE,
@@ -34,7 +35,7 @@ export class ContinuationSheetFeeService {
 
     const continuationSheet = {
       P_SPID: spid,
-      P_EFFDATE: data.effectiveDate,
+      P_EFFDATE: this.commonService.formatUSDate(data.effectiveDate),
       P_CUSTOMERTYPE: data.customerType,
       P_CARNETTYPE: data.carnetType,
       P_RATE: data.rate,
@@ -48,7 +49,7 @@ export class ContinuationSheetFeeService {
 
     const continuationSheet = {
       P_CSFEESETUPID: id,
-      P_EFFDATE: data.effectiveDate,
+      P_EFFDATE: this.commonService.formatUSDate(data.effectiveDate),
       P_RATE: data.rate,
       P_USERID: this.userService.getUser()
     }

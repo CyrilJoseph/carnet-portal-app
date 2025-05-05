@@ -47,8 +47,8 @@ export class ContactsComponent implements OnInit {
       middleInitial: ['', [Validators.maxLength(1)]],
       title: ['', [Validators.required, Validators.maxLength(100)]],
       phone: ['', [Validators.required, Validators.pattern(/^[0-9]{10,15}$/)]],
-      mobile: ['', [Validators.pattern(/^[0-9]{10,15}$/)]],
-      fax: ['', [Validators.pattern(/^[0-9]{10,15}$/)]],
+      mobile: ['', [Validators.required, Validators.pattern(/^[0-9]{10,15}$/)]],
+      fax: ['', [Validators.required, Validators.pattern(/^[0-9]{10,15}$/)]],
       email: ['', [Validators.required, Validators.email, Validators.maxLength(100)]],
       defaultContact: [false]
     });

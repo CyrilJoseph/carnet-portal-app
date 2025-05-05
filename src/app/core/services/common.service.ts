@@ -7,8 +7,8 @@ import { State } from '../models/state';
 import { environment } from '../../../environments/environment';
 import { Commodity } from '../models/commodity';
 import { DeliveryType } from '../models/delivery-type';
-import { TimeZone } from '../models/TimeZone';
 import { FeeType } from '../models/fee-type';
+import { TimeZone } from '../models/TimeZone';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +20,7 @@ export class CommonService {
   constructor(private http: HttpClient) { }
 
   getCountries(spid: number = 0): Observable<Country[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetParamValues?P_PARAMTYPE=002&P_SPID=${spid}`).pipe(
+    return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetParamValues?P_PARAMTYPE=002&P_SPID=0`).pipe(
       map((response) =>
         response.map((item) => ({
           name: item.PARAMDESC,
@@ -32,7 +32,7 @@ export class CommonService {
   }
 
   getStates(country: string, spid: number = 0): Observable<State[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetParamValues?P_PARAMTYPE=001&P_SPID=${spid}`).pipe(
+    return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetParamValues?P_PARAMTYPE=001&P_SPID=0`).pipe(
       map((response) =>
         response.map((item) => ({
           name: item.PARAMDESC,
@@ -61,7 +61,7 @@ export class CommonService {
   }
 
   getCommodities(spid: number = 0): Observable<Commodity[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetParamValues?P_PARAMTYPE=002&P_SPID=${spid}`).pipe(
+    return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetParamValues?P_PARAMTYPE=002&P_SPID=0`).pipe(
       map((response) =>
         response.map((item) => ({
           name: item.PARAMDESC,
@@ -73,7 +73,7 @@ export class CommonService {
   }
 
   getDeliveryTypes(spid: number = 0): Observable<DeliveryType[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetParamValues?P_PARAMTYPE=006&P_SPID=${spid}`).pipe(
+    return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetParamValues?P_PARAMTYPE=006&P_SPID=0`).pipe(
       map((response) =>
         response.map((item) => ({
           name: item.PARAMDESC,
@@ -85,7 +85,7 @@ export class CommonService {
   }
 
   getTimezones(spid: number = 0): Observable<TimeZone[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetParamValues?P_PARAMTYPE=010&P_SPID=${spid}`).pipe(
+    return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetParamValues?P_PARAMTYPE=010&P_SPID=0`).pipe(
       map((response) =>
         response.map((item) => ({
           name: item.PARAMDESC,
@@ -97,7 +97,7 @@ export class CommonService {
   }
 
   getFeeTypes(spid: number = 0): Observable<FeeType[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetParamValues?P_PARAMTYPE=009&P_SPID=${spid}`).pipe(
+    return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetParamValues?P_PARAMTYPE=009&P_SPID=0`).pipe(
       map((response) =>
         response.map((item) => ({
           name: item.PARAMDESC,
@@ -106,5 +106,13 @@ export class CommonService {
         }))
       )
     );
+  }
+
+  formatUSDate(date: Date): string {
+    return new Date(date).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    });
   }
 }

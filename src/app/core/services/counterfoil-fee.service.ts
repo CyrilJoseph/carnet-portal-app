@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { CounterfoilFee } from '../models/service-provider/counterfoil-fee';
 import { map, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { CommonService } from './common.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class CounterfoilFeeService {
   private apiUrl = environment.apiUrl;
   private apiDb = environment.apiDb;
 
-  constructor(private http: HttpClient, private userService: UserService) { }
+  constructor(private http: HttpClient, private userService: UserService, private commonService: CommonService) { }
 
   getCounterfoils(spid: number): Observable<CounterfoilFee[]> {
     return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetCfFeeRates?P_SPID=${spid}&P_ACTIVE_INACTIVE=ACTIVE`).pipe(
@@ -21,7 +22,7 @@ export class CounterfoilFeeService {
 
   private mapToCounterFoilFee(data: any[]): CounterfoilFee[] {
     return data.map(item => ({
-      id: item.P_CFFEESETUPID,
+      id: item.CFFEESETUPID,
       spid: item.SPID,
       startSets: item.STARTSETS,
       endSets: item.ENDSETS,
@@ -38,7 +39,7 @@ export class CounterfoilFeeService {
       P_SPID: spid,
       P_STARTSETS: data.startSets,
       P_ENDSETS: data.endSets,
-      P_EFFDATE: data.effectiveDate,
+      P_EFFDATE: this.commonService.formatUSDate(data.effectiveDate),
       P_CUSTOMERTYPE: data.customerType,
       P_CARNETTYPE: data.carnetType,
       P_RATE: data.rate,
@@ -52,7 +53,7 @@ export class CounterfoilFeeService {
 
     const counterfoilFee = {
       P_CFFEESETUPID: id,
-      P_EFFDATE: data.effectiveDate,
+      P_EFFDATE: this.commonService.formatUSDate(data.effectiveDate),
       P_RATE: data.rate,
       P_USERID: this.userService.getUser()
     }

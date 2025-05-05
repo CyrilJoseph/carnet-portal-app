@@ -27,7 +27,7 @@ export class CarnetFeeComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  displayedColumns: string[] = ['feeType', 'description', 'commissionRate', 'effectiveDate', 'actions'];
+  displayedColumns: string[] = ['feeType', 'commissionRate', 'effectiveDate', 'actions'];
   dataSource = new MatTableDataSource<CarnetFee>();
   feeCommissionForm: FormGroup;
   isEditing = false;
@@ -49,7 +49,6 @@ export class CarnetFeeComponent implements OnInit {
   ) {
     this.feeCommissionForm = this.fb.group({
       feeType: ['', Validators.required],
-      description: [''],
       commissionRate: [0, [Validators.required]],
       effectiveDate: ['', Validators.required]
     });
@@ -114,14 +113,12 @@ export class CarnetFeeComponent implements OnInit {
     this.currentFeeCommissionId = feeCommission.feeCommissionId;
     this.feeCommissionForm.patchValue({
       feeType: feeCommission.feeType,
-      description: feeCommission.description,
       commissionRate: feeCommission.commissionRate,
       effectiveDate: feeCommission.effectiveDate
     });
 
     if (this.isEditMode) {
       this.feeCommissionForm.get('feeType')?.disable();
-      this.feeCommissionForm.get('description')?.disable();
     }
   }
 
@@ -135,7 +132,6 @@ export class CarnetFeeComponent implements OnInit {
     const feeCommissionData: CarnetFee = {
       feeCommissionId: this.currentFeeCommissionId || 0,
       feeType: formData.feeType,
-      description: formData.description || null,
       commissionRate: formData.commissionRate,
       effectiveDate: formData.effectiveDate,
       spid: this.spid

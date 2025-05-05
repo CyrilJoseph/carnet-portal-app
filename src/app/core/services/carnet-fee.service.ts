@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { CarnetFee } from '../models/service-provider/carnet-fee';
+import { CommonService } from './common.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class CarnetFeeService {
   private apiUrl = environment.apiUrl;
   private apiDb = environment.apiDb;
 
-  constructor(private http: HttpClient, private userService: UserService) { }
+  constructor(private http: HttpClient, private userService: UserService, private commonService: CommonService) { }
 
   getFeeCommissions(spid: number): Observable<CarnetFee[]> {
     return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetFeeComm?P_SPID=${spid}&P_ACTIVE_INACTIVE=ACTIVE`).pipe(
@@ -36,7 +37,7 @@ export class CarnetFeeService {
       P_PARAMID: data.feeType,
       //P_DESCRIPTION: data.description,
       P_COMMRATE: data.commissionRate,
-      P_EFFDATE: data.effectiveDate,
+      P_EFFDATE: this.commonService.formatUSDate(data.effectiveDate),
       P_USERID: this.userService.getUser()
     };
 
@@ -47,7 +48,7 @@ export class CarnetFeeService {
     const feeCommission = {
       P_FEECOMMID: id,
       P_RATE: data.commissionRate,
-      P_EFFDATE: data.effectiveDate,
+      P_EFFDATE: this.commonService.formatUSDate(data.effectiveDate),
       P_USERID: this.userService.getUser()
     };
 

@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { UserService } from './user.service';
 import { BasicFee } from '../models/service-provider/basic-fee';
 import { map, Observable } from 'rxjs';
+import { CommonService } from './common.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class BasicFeeService {
   private apiUrl = environment.apiUrl;
   private apiDb = environment.apiDb;
 
-  constructor(private http: HttpClient, private userService: UserService) { }
+  constructor(private http: HttpClient, private userService: UserService, private commonService: CommonService) { }
 
   getBasicFees(spid: number): Observable<BasicFee[]> {
     return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetBasicFeeRates?P_SPID=${spid}&P_ACTIVE_INACTIVE=ACTIVE`).pipe(
@@ -21,7 +22,7 @@ export class BasicFeeService {
 
   private mapToBasicFees(data: any[]): BasicFee[] {
     return data.map(item => ({
-      basicFeeId: item.P_BASICFEESETUPID,
+      basicFeeId: item.BASICFEESETUPID,
       startCarnetValue: item.STARTCARNETVALUE,
       endCarnetValue: item.ENDCARNETVALUE,
       fees: item.FEES,
@@ -35,7 +36,7 @@ export class BasicFeeService {
       P_STARTCARNETVALUE: fee.startCarnetValue,
       P_ENDCARNETVALUE: fee.endCarnetValue,
       P_FEES: fee.fees,
-      P_EFFDATE: fee.effectiveDate,
+      P_EFFDATE: this.commonService.formatUSDate(fee.effectiveDate),
       P_USERID: this.userService.getUser()
     };
 
@@ -47,7 +48,7 @@ export class BasicFeeService {
       P_STARTCARNETVALUE: fee.startCarnetValue,
       P_ENDCARNETVALUE: fee.endCarnetValue,
       P_FEES: fee.fees,
-      P_EFFDATE: fee.effectiveDate,
+      P_EFFDATE: this.commonService.formatUSDate(fee.effectiveDate),
       P_USERID: this.userService.getUser()
     };
 
