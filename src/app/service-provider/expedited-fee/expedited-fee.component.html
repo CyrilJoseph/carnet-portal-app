@@ -146,7 +146,7 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Fee</mat-label>
                     <input matInput type="number" formControlName="fee" required min="0" step="1">
-                    <span matPrefix>$&nbsp;</span>
+                    <span class="dollar-prefix" matPrefix>$&nbsp;</span>
                     <mat-error *ngIf="feeForm.get('fee')?.errors?.['required']">
                         Fee is required
                     </mat-error>

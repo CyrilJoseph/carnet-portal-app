@@ -216,7 +216,7 @@ export class BasicDetailsComponent implements OnInit, OnDestroy {
         this.notificationService.showSuccess(`Basic details ${this.isEditMode ? 'updated' : 'added'} successfully`);
 
         if (!this.isEditMode) {
-          this.spidCreated.emit(basicData.spid);
+          this.spidCreated.emit(basicData.SPID);
         }
       },
       error: (error) => {

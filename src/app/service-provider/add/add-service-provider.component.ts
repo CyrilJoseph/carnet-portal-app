@@ -38,7 +38,7 @@ export class AddServiceProviderComponent {
   onBasicDetailsSaved(event: string): void {
     this.serviceProviderId = +event;
     this.basicDetailsCompleted = true;
-    this.currentStep = 1;
+    // this.currentStep = 1;
   }
 
   onContactsSaved(event: boolean): void {
