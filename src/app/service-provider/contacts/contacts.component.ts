@@ -33,6 +33,13 @@ export class ContactsComponent implements OnInit {
   isLoading = false;
   showForm = false;
 
+  contactReadOnlyFields: any = {
+    lastChangedDate: null,
+    lastChangedBy: null,
+    isInactive: null,
+    inactivatedDate: null
+  };
+
   @Input() spid: number = 0;
   @Output() hasContacts = new EventEmitter<boolean>();
 
@@ -111,9 +118,14 @@ export class ContactsComponent implements OnInit {
       phone: contact.phone,
       mobile: contact.mobile,
       fax: contact.fax,
-      email: contact.email,
+      email: contact.email
       //  defaultContact: contact.defaultContact
     });
+
+    this.contactReadOnlyFields.lastChangedDate = contact.lastUpdatedDate ?? contact.dateCreated;
+    this.contactReadOnlyFields.lastChangedBy = contact.lastUpdatedBy ?? contact.createdBy;
+    this.contactReadOnlyFields.isInactive = contact.isInactive;
+    this.contactReadOnlyFields.inactivatedDate = contact.inactivatedDate;
   }
 
   saveContact(): void {

@@ -62,8 +62,9 @@
                     <button mat-icon-button color="primary" (click)="editContact(contact)" matTooltip="Edit">
                         <mat-icon>edit</mat-icon>
                     </button>
-                    <button mat-icon-button color="warn" *ngIf="!contact.defaultContact" (click)="
-                        deleteContact(contact.spContactId)" [hidden]="contact.defaultContact" matTooltip="Delete">
+                    <button mat-icon-button color="warn" *ngIf="!contact.defaultContact || !contact.isInactive" (click)="
+                        deleteContact(contact.spContactId)" [hidden]="contact.defaultContact || contact.isInactive"
+                        matTooltip="Delete">
                         <mat-icon>delete</mat-icon>
                     </button>
                     <!-- <button mat-icon-button (click)="setDefaultContact(contact.contactId)"
@@ -202,6 +203,44 @@
             <div class="form-row">
                 <mat-checkbox formControlName="defaultContact">Default Contact</mat-checkbox>
             </div> -->
+            <div *ngIf="isEditing" class="readonly-section">
+                <div class="readonly-fields">
+                    <div class="field-column">
+                        <!-- Last Changed By -->
+                        <div class="readonly-field">
+                            <label>Last Changed By</label>
+                            <div class="readonly-value">
+                                {{contactReadOnlyFields.lastChangedBy || 'N/A'}}
+                            </div>
+                        </div>
+                        <!-- Inactive status -->
+                        <div class="readonly-field">
+                            <label>Inactive Status </label>
+                            <div class="readonly-value">
+                                {{contactReadOnlyFields.isInactive === true ? 'Yes' : 'No' }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field-column">
+
+                        <!-- Last Changed Date -->
+                        <div class="readonly-field">
+                            <label>Last Changed Date</label>
+                            <div class="readonly-value">
+                                {{(contactReadOnlyFields.lastChangedDate | date:'mediumDate':'UTC') || 'N/A'}}
+                            </div>
+                        </div>
+
+                        <!-- Inactivated Date -->
+                        <div class="readonly-field">
+                            <label>Inactivated Date</label>
+                            <div class="readonly-value">
+                                {{(contactReadOnlyFields.inactivatedDate | date:'mediumDate':'UTC') || 'N/A'}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div class="form-actions">
                 <button mat-button type="button" (click)="cancelEdit()">Cancel</button>

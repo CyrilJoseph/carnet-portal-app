@@ -31,7 +31,13 @@ export class ContactService {
       mobile: contact.MOBILENO,
       fax: contact.FAXNO || null,
       email: contact.EMAILADDRESS,
-      middleInitial: contact.MIDDLEINITIAL || null
+      middleInitial: contact.MIDDLEINITIAL || null,
+      createdBy: contact.CREATEDBY || null,
+      dateCreated: contact.DATECREATED || null,
+      lastUpdatedBy: contact.LASTUPDATEDBY || null,
+      lastUpdatedDate: contact.LASTUPDATEDDATE || null,
+      isInactive: contact.INACTIVEFLAG === 'Y' || false,
+      inactivatedDate: contact.INACTIVEDATE || null
     }));
   }
 
@@ -58,7 +64,6 @@ export class ContactService {
 
     const contact = {
       p_spcontactid: spContactId,
-      //p_defcontactflag: data.defaultContact ? 'Y' : 'N',
       p_firstname: data.firstName,
       p_lastname: data.lastName,
       P_MIDDLEINITIAL: data.middleInitial,
