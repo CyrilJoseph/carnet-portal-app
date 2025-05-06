@@ -12,6 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 import { CustomPaginator } from '../../shared/custom-paginator';
 import { forkJoin } from 'rxjs';
+import { ApiErrorHandlerService } from '../../core/services/api-error-handler.service';
 
 @Component({
   selector: 'app-basic-fee',
@@ -40,7 +41,8 @@ export class BasicFeeComponent {
     private fb: FormBuilder,
     private basicFeeService: BasicFeeService,
     private notificationService: NotificationService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private errorHandler: ApiErrorHandlerService
   ) {
     this.feeForm = this.fb.group({
       startCarnetValue: [0, [Validators.required, Validators.min(0)]],
@@ -72,7 +74,8 @@ export class BasicFeeComponent {
         }
       },
       error: (error) => {
-        this.notificationService.showError('Failed to load basic fees');
+        let errorMessage = this.errorHandler.handleApiError(error, 'Failed to load basic fees');
+        this.notificationService.showError(errorMessage);
         this.isLoading = false;
         console.error('Error loading basic fees:', error);
       }
@@ -82,12 +85,12 @@ export class BasicFeeComponent {
   initializeDefaultFees(): void {
     this.isLoading = true;
     const defaultFees: BasicFee[] = [
-      { basicFeeId: 0, startCarnetValue: 1, endCarnetValue: 9999, fees: 255, effectiveDate: new Date('2020-01-01') },
-      { basicFeeId: 0, startCarnetValue: 10000, endCarnetValue: 49999, fees: 300, effectiveDate: new Date('2020-01-01') },
-      { basicFeeId: 0, startCarnetValue: 50000, endCarnetValue: 149999, fees: 365, effectiveDate: new Date('2020-01-01') },
-      { basicFeeId: 0, startCarnetValue: 150000, endCarnetValue: 399999, fees: 425, effectiveDate: new Date('2020-01-01') },
-      { basicFeeId: 0, startCarnetValue: 400000, endCarnetValue: 999999, fees: 480, effectiveDate: new Date('2020-01-01') },
-      { basicFeeId: 0, startCarnetValue: 1000000, endCarnetValue: null, fees: 545, effectiveDate: new Date('2020-01-01') }
+      { basicFeeId: 0, startCarnetValue: 1, endCarnetValue: 9999, fees: 255, effectiveDate: new Date() },
+      { basicFeeId: 0, startCarnetValue: 10000, endCarnetValue: 49999, fees: 300, effectiveDate: new Date() },
+      { basicFeeId: 0, startCarnetValue: 50000, endCarnetValue: 149999, fees: 365, effectiveDate: new Date() },
+      { basicFeeId: 0, startCarnetValue: 150000, endCarnetValue: 399999, fees: 425, effectiveDate: new Date() },
+      { basicFeeId: 0, startCarnetValue: 400000, endCarnetValue: 999999, fees: 480, effectiveDate: new Date() },
+      { basicFeeId: 0, startCarnetValue: 1000000, endCarnetValue: null, fees: 545, effectiveDate: new Date() }
     ];
 
     // Create an array of observables for each fee creation
@@ -176,7 +179,8 @@ export class BasicFeeComponent {
         this.cancelEdit();
       },
       error: (error) => {
-        this.notificationService.showError(`Failed to ${this.isEditing ? 'update' : 'add'} basic fee`);
+        let errorMessage = this.errorHandler.handleApiError(error, `Failed to ${this.isEditing ? 'update' : 'add'} basic fee`);
+        this.notificationService.showError(errorMessage);
         console.error('Error saving basic fee:', error);
       }
     });

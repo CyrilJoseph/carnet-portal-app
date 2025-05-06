@@ -14,6 +14,7 @@ import { Commodity } from '../../core/models/commodity';
 import { CommonService } from '../../core/services/common.service';
 import { SecurityDeposit } from '../../core/models/service-provider/security-deposit';
 import { SecurityDepositService } from '../../core/services/security-deposit.service';
+import { ApiErrorHandlerService } from '../../core/services/api-error-handler.service';
 
 @Component({
   selector: 'app-security-deposit',
@@ -57,7 +58,8 @@ export class SecurityDepositComponent implements OnInit {
     private securityDepositService: SecurityDepositService,
     private commonService: CommonService,
     private notificationService: NotificationService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private errorHandler: ApiErrorHandlerService
   ) {
     this.depositForm = this.fb.group({
       holderType: ['CORP', Validators.required],
@@ -72,7 +74,7 @@ export class SecurityDepositComponent implements OnInit {
   ngOnInit(): void {
     this.loadSecurityDeposits();
     this.loadCountries();
-  //  this.loadCommodities();
+    //  this.loadCommodities();
   }
 
   ngAfterViewInit() {
@@ -88,7 +90,8 @@ export class SecurityDepositComponent implements OnInit {
         this.isLoading = false;
       },
       error: (error) => {
-        this.notificationService.showError('Failed to load security deposits');
+        let errorMessage = this.errorHandler.handleApiError(error, 'Failed to load security deposits');
+        this.notificationService.showError(errorMessage);
         this.isLoading = false;
         console.error('Error loading security deposits:', error);
       }
@@ -149,7 +152,7 @@ export class SecurityDepositComponent implements OnInit {
       rate: deposit.rate,
       effectiveDate: deposit.effectiveDate
     });
-    
+
     if (this.isEditMode) {
       this.depositForm.get('holderType')?.disable();
       this.depositForm.get('uscibMember')?.disable();
@@ -182,7 +185,8 @@ export class SecurityDepositComponent implements OnInit {
         this.cancelEdit();
       },
       error: (error) => {
-        this.notificationService.showError(`Failed to ${this.isEditing ? 'update' : 'add'} security deposit`);
+        let errorMessage = this.errorHandler.handleApiError(error, `Failed to ${this.isEditing ? 'update' : 'add'} security deposit`);
+        this.notificationService.showError(errorMessage);
         console.error('Error saving security deposit:', error);
       }
     });

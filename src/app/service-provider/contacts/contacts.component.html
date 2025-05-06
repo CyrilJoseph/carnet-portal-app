@@ -62,8 +62,8 @@
                     <button mat-icon-button color="primary" (click)="editContact(contact)" matTooltip="Edit">
                         <mat-icon>edit</mat-icon>
                     </button>
-                    <button mat-icon-button color="warn" (click)="deleteContact(contact.spContactId)"
-                        [hidden]="contact.defaultContact" matTooltip="Delete">
+                    <button mat-icon-button color="warn" *ngIf="!contact.defaultContact" (click)="
+                        deleteContact(contact.spContactId)" [hidden]="contact.defaultContact" matTooltip="Delete">
                         <mat-icon>delete</mat-icon>
                     </button>
                     <!-- <button mat-icon-button (click)="setDefaultContact(contact.contactId)"

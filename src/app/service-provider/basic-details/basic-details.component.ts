@@ -12,6 +12,7 @@ import { CommonModule } from '@angular/common';
 import { NotificationService } from '../../core/services/notification.service';
 import { ZipCodeValidator } from '../../shared/validators/zipcode-validator';
 import { BasicDetailService } from '../../core/services/basic-detail.service';
+import { ApiErrorHandlerService } from '../../core/services/api-error-handler.service';
 
 @Component({
   selector: 'app-basic-details',
@@ -29,6 +30,7 @@ export class BasicDetailsComponent implements OnInit, OnDestroy {
   regions: Region[] = [];
   states: State[] = [];
   isLoading = true;
+  countriesHasStates = ['US', 'CA', 'MX'];
 
   private destroy$ = new Subject<void>();
 
@@ -36,7 +38,8 @@ export class BasicDetailsComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private commonService: CommonService,
     private basicDetailService: BasicDetailService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private errorHandler: ApiErrorHandlerService
   ) {
     this.basicDetailsForm = this.createForm();
   }
@@ -54,7 +57,8 @@ export class BasicDetailsComponent implements OnInit, OnDestroy {
           this.isLoading = false;
         },
         error: (error: any) => {
-          this.notificationService.showError('Failed to load basic details');
+          let errorMessage = this.errorHandler.handleApiError(error, 'Failed to load basic details');
+          this.notificationService.showError(errorMessage);
           this.isLoading = false;
           console.error('Error loading basic details:', error);
         }
@@ -118,11 +122,19 @@ export class BasicDetailsComponent implements OnInit, OnDestroy {
 
   loadStates(country: string): void {
     this.isLoading = true;
+    country = this.countriesHasStates.includes(country) ? country : 'FN';
     this.commonService.getStates(country, this.spid)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (states) => {
           this.states = states;
+          const stateControl = this.basicDetailsForm.get('state');
+          if (this.countriesHasStates.includes(country)) {
+            stateControl?.enable();
+          } else {
+            stateControl?.disable();
+            stateControl?.setValue('FN');
+          }
           this.isLoading = false;
         },
         error: (error) => {
@@ -164,9 +176,6 @@ export class BasicDetailsComponent implements OnInit, OnDestroy {
 
     if (country) {
       this.loadStates(country);
-      this.basicDetailsForm.get('state')?.enable();
-    } else {
-      this.basicDetailsForm.get('state')?.disable();
     }
 
     this.basicDetailsForm.get('zip')?.updateValueAndValidity();
@@ -185,15 +194,19 @@ export class BasicDetailsComponent implements OnInit, OnDestroy {
 
     const basicDetailData: BasicDetail = this.basicDetailsForm.value;
 
+    // states
+    basicDetailData.state = this.basicDetailsForm.get('state')?.value;
+
+    // regions
     if (this.isEditMode) {
       basicDetailData.issuingRegion = this.basicDetailsForm.get('issuingRegion')?.value;
       basicDetailData.replacementRegion = this.basicDetailsForm.get('replacementRegion')?.value;
     }
-    
+
     basicDetailData.cargoSurety = basicDetailData.cargoSurety ?? '';
     basicDetailData.cargoPolicyNo = basicDetailData.cargoPolicyNo ?? '';
     basicDetailData.bondSurety = basicDetailData.bondSurety ?? '';
-    
+
     const saveObservable = this.isEditMode && this.spid > 0
       ? this.basicDetailService.updateBasicDetails(this.spid, basicDetailData)
       : this.basicDetailService.createBasicDetails(basicDetailData);
@@ -207,7 +220,8 @@ export class BasicDetailsComponent implements OnInit, OnDestroy {
         }
       },
       error: (error) => {
-        this.notificationService.showError(`Failed to ${this.isEditMode ? 'update' : 'add'} basic details`);
+        let errorMessage = this.errorHandler.handleApiError(error, `Failed to ${this.isEditMode ? 'update' : 'add'} basic details`);
+        this.notificationService.showError(errorMessage);
         console.error('Error saving contact:', error);
       }
     });

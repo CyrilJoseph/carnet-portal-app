@@ -12,6 +12,7 @@ import { PhonePipe } from '../../shared/pipes/phone.pipe';
 import { CommonModule } from '@angular/common';
 import { CustomPaginator } from '../../shared/custom-paginator';
 import { ContactService } from '../../core/services/contact.service';
+import { ApiErrorHandlerService } from '../../core/services/api-error-handler.service';
 
 @Component({
   selector: 'app-contacts',
@@ -39,7 +40,8 @@ export class ContactsComponent implements OnInit {
     private fb: FormBuilder,
     private contactService: ContactService,
     private notificationService: NotificationService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private errorHandler: ApiErrorHandlerService
   ) {
     this.contactForm = this.fb.group({
       firstName: ['', [Validators.required, Validators.maxLength(50)]],
@@ -72,7 +74,8 @@ export class ContactsComponent implements OnInit {
         this.isLoading = false;
       },
       error: (error: any) => {
-        this.notificationService.showError('Failed to load contacts');
+        let errorMessage = this.errorHandler.handleApiError(error, 'Failed to load contacts');
+        this.notificationService.showError(errorMessage);
         this.isLoading = false;
         console.error('Error loading contacts:', error);
       }
@@ -93,7 +96,7 @@ export class ContactsComponent implements OnInit {
     this.isEditing = false;
     this.currentContactId = null;
     this.contactForm.reset();
-   // this.contactForm.patchValue({ defaultContact: false });
+    // this.contactForm.patchValue({ defaultContact: false });
   }
 
   editContact(contact: Contact): void {
@@ -109,7 +112,7 @@ export class ContactsComponent implements OnInit {
       mobile: contact.mobile,
       fax: contact.fax,
       email: contact.email,
-    //  defaultContact: contact.defaultContact
+      //  defaultContact: contact.defaultContact
     });
   }
 
@@ -119,7 +122,10 @@ export class ContactsComponent implements OnInit {
       return;
     }
 
-    const contactData = this.contactForm.value;
+    // default the first contact
+    const contactData: Contact = this.contactForm.value;
+    contactData.defaultContact = this.dataSource?.data?.length === 0;
+
     const saveObservable = this.isEditing && (this.currentContactId! > 0)
       ? this.contactService.updateContact(this.currentContactId!, contactData)
       : this.contactService.createContact(this.spid, contactData);
@@ -132,7 +138,8 @@ export class ContactsComponent implements OnInit {
         this.hasContacts.emit(true);
       },
       error: (error) => {
-        this.notificationService.showError(`Failed to ${this.isEditing ? 'update' : 'add'} contact`);
+        let errorMessage = this.errorHandler.handleApiError(error, `Failed to ${this.isEditing ? 'update' : 'add'} contact`);
+        this.notificationService.showError(errorMessage);
         console.error('Error saving contact:', error);
       }
     });
@@ -157,7 +164,8 @@ export class ContactsComponent implements OnInit {
             this.loadContacts();
           },
           error: (error) => {
-            this.notificationService.showError('Failed to delete contact');
+            let errorMessage = this.errorHandler.handleApiError(error, 'Failed to delete contact');
+            this.notificationService.showError(errorMessage);
             console.error('Error deleting contact:', error);
           }
         });

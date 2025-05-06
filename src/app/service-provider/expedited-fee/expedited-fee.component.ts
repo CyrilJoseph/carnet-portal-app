@@ -15,6 +15,7 @@ import { TimeZone } from '../../core/models/TimeZone';
 import { CommonService } from '../../core/services/common.service';
 import { Subject, takeUntil } from 'rxjs';
 import { ExpeditedFeeService } from '../../core/services/expedited-fee.service';
+import { ApiErrorHandlerService } from '../../core/services/api-error-handler.service';
 
 @Component({
   selector: 'app-expedited-fee',
@@ -54,7 +55,8 @@ export class ExpeditedFeeComponent implements OnInit, OnDestroy {
     private expeditedFeeService: ExpeditedFeeService,
     private notificationService: NotificationService,
     private commonService: CommonService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private errorHandler: ApiErrorHandlerService
   ) {
     this.feeForm = this.fb.group({
       customerType: ['PREPARER', Validators.required],
@@ -92,7 +94,8 @@ export class ExpeditedFeeComponent implements OnInit, OnDestroy {
         this.isLoading = false;
       },
       error: (error: any) => {
-        this.notificationService.showError('Failed to load expedited fees');
+        let errorMessage = this.errorHandler.handleApiError(error, 'Failed to load expedited fees');
+        this.notificationService.showError(errorMessage);
         this.isLoading = false;
         console.error('Error loading expedited fees:', error);
       }
@@ -192,7 +195,8 @@ export class ExpeditedFeeComponent implements OnInit, OnDestroy {
         this.cancelEdit();
       },
       error: (error) => {
-        this.notificationService.showError(`Failed to ${this.isEditing ? 'update' : 'add'} expedited fee`);
+        let errorMessage = this.errorHandler.handleApiError(error, `Failed to ${this.isEditing ? 'update' : 'add'} expedited fee`);
+        this.notificationService.showError(errorMessage);
         console.error('Error saving expedited fee:', error);
       }
     });

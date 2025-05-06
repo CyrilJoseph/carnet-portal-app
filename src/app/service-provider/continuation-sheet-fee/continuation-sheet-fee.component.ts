@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 import { of } from 'rxjs';
 import { CustomPaginator } from '../../shared/custom-paginator';
 import { ContinuationSheetFeeService } from '../../core/services/continuation-sheet-fee.service';
+import { ApiErrorHandlerService } from '../../core/services/api-error-handler.service';
 
 @Component({
   selector: 'app-continuation-sheet-fee',
@@ -51,7 +52,8 @@ export class ContinuationSheetFeeComponent implements OnInit {
     private fb: FormBuilder,
     private continuationSheetFeeService: ContinuationSheetFeeService,
     private notificationService: NotificationService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private errorHandler: ApiErrorHandlerService
   ) {
     this.continuationSheetForm = this.fb.group({
       customerType: ['PREPARER', Validators.required],
@@ -84,7 +86,8 @@ export class ContinuationSheetFeeComponent implements OnInit {
         this.isLoading = false;
       },
       error: (error) => {
-        this.notificationService.showError('Failed to load continuation sheets');
+        let errorMessage = this.errorHandler.handleApiError(error, 'Failed to load continuation sheets');
+        this.notificationService.showError(errorMessage);
         this.isLoading = false;
         return of([]);
       }
@@ -151,7 +154,8 @@ export class ContinuationSheetFeeComponent implements OnInit {
         this.hasContinuationSheetFee.emit(true);
       },
       error: (error) => {
-        this.notificationService.showError(`Failed to ${this.isEditing ? 'update' : 'add'} continuation sheet`);
+        let errorMessage = this.errorHandler.handleApiError(error, `Failed to ${this.isEditing ? 'update' : 'add'} continuation sheet`);
+        this.notificationService.showError(errorMessage);
         return of(null);
       }
     });

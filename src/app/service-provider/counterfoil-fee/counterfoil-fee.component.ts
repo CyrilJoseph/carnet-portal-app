@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 import { CounterfoilFee } from '../../core/models/service-provider/counterfoil-fee';
 import { CustomPaginator } from '../../shared/custom-paginator';
 import { CounterfoilFeeService } from '../../core/services/counterfoil-fee.service';
+import { ApiErrorHandlerService } from '../../core/services/api-error-handler.service';
 
 @Component({
   selector: 'app-counterfoil-fee',
@@ -51,7 +52,8 @@ export class CounterfoilFeeComponent implements OnInit {
     private fb: FormBuilder,
     private counterfoilFeeService: CounterfoilFeeService,
     private notificationService: NotificationService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private errorHandler: ApiErrorHandlerService
   ) {
     this.counterfoilForm = this.fb.group({
       customerType: ['PREPARER', Validators.required],
@@ -102,7 +104,8 @@ export class CounterfoilFeeComponent implements OnInit {
           this.isLoading = false;
         },
         error: (error: any) => {
-          this.notificationService.showError('Failed to load counterfoils');
+          let errorMessage = this.errorHandler.handleApiError(error, 'Failed to load counterfoils');
+          this.notificationService.showError(errorMessage);
           this.isLoading = false;
           console.error('Error loading counterfoils:', error);
         }
@@ -172,7 +175,8 @@ export class CounterfoilFeeComponent implements OnInit {
         this.hasCounterFoilFee.emit(true);
       },
       error: (error) => {
-        this.notificationService.showError(`Failed to ${this.isEditing ? 'update' : 'add'} counterfoil`);
+        let errorMessage = this.errorHandler.handleApiError(error, `Failed to ${this.isEditing ? 'update' : 'add'} counterfoil`);
+        this.notificationService.showError(errorMessage);
         console.error('Error saving counterfoil:', error);
       }
     });

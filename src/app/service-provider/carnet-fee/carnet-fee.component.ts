@@ -14,6 +14,7 @@ import { CommonService } from '../../core/services/common.service';
 import { CarnetFee } from '../../core/models/service-provider/carnet-fee';
 import { FeeType } from '../../core/models/fee-type';
 import { CarnetFeeService } from '../../core/services/carnet-fee.service';
+import { ApiErrorHandlerService } from '../../core/services/api-error-handler.service';
 
 @Component({
   selector: 'app-carnet-fee',
@@ -45,7 +46,8 @@ export class CarnetFeeComponent implements OnInit {
     private feeCommissionService: CarnetFeeService,
     private commonService: CommonService,
     private notificationService: NotificationService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private errorHandler: ApiErrorHandlerService
   ) {
     this.feeCommissionForm = this.fb.group({
       feeType: ['', Validators.required],
@@ -73,7 +75,8 @@ export class CarnetFeeComponent implements OnInit {
         this.isLoading = false;
       },
       error: (error) => {
-        this.notificationService.showError('Failed to load fee & commission data');
+        let errorMessage = this.errorHandler.handleApiError(error, 'Failed to load fee & commission data');
+        this.notificationService.showError(errorMessage);
         this.isLoading = false;
         console.error('Error loading fee & commission data:', error);
       }
@@ -148,7 +151,8 @@ export class CarnetFeeComponent implements OnInit {
         this.cancelEdit();
       },
       error: (error) => {
-        this.notificationService.showError(`Failed to ${this.isEditing ? 'update' : 'add'} fee & commission`);
+        let errorMessage = this.errorHandler.handleApiError(error, `Failed to ${this.isEditing ? 'update' : 'add'} fee & commission`);
+        this.notificationService.showError(errorMessage);
         console.error('Error saving fee & commission:', error);
       }
     });

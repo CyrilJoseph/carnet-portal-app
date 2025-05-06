@@ -14,6 +14,7 @@ import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/c
 import { MatDialog } from '@angular/material/dialog';
 import { CustomPaginator } from '../../shared/custom-paginator';
 import { CarnetSequenceService } from '../../core/services/carnet-sequence.service';
+import { ApiErrorHandlerService } from '../../core/services/api-error-handler.service';
 
 @Component({
   selector: 'app-carnet-sequence',
@@ -52,7 +53,8 @@ export class CarnetSequenceComponent implements OnInit {
     private carnetSequenceService: CarnetSequenceService,
     private notificationService: NotificationService,
     private commonService: CommonService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private errorHandler: ApiErrorHandlerService
   ) {
     this.sequenceForm = this.fb.group({
       carnetType: ['ORIGINAL', Validators.required],
@@ -124,7 +126,8 @@ export class CarnetSequenceComponent implements OnInit {
         this.isLoading = false;
       },
       error: (error: any) => {
-        this.notificationService.showError('Failed to load sequences');
+        let errorMessage = this.errorHandler.handleApiError(error, 'Failed to load sequences');
+        this.notificationService.showError(errorMessage);
         this.isLoading = false;
         console.error('Error loading sequences:', error);
       }
@@ -150,7 +153,8 @@ export class CarnetSequenceComponent implements OnInit {
         this.hasCarnetSequence.emit(true);
       },
       error: (error) => {
-        this.notificationService.showError(`Failed to add sequence`);
+        let errorMessage = this.errorHandler.handleApiError(error, 'Failed to add sequence');
+        this.notificationService.showError(errorMessage);
         console.error('Error adding sequence:', error);
       }
     });
@@ -192,7 +196,8 @@ export class CarnetSequenceComponent implements OnInit {
           this.hasCarnetSequence.emit(true);
         },
         error: (error) => {
-          this.notificationService.showError(`Failed to add sequence`);
+          let errorMessage = this.errorHandler.handleApiError(error, `Failed to add sequence`);
+          this.notificationService.showError(errorMessage);
           console.error('Error adding sequence:', error);
         }
       });
