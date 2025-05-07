@@ -7,4 +7,6 @@ export interface ExpeditedFee {
     timeZone: string;
     fee: number;
     effectiveDate: Date;
+    dateCreated?: Date | null;
+    createdBy?: string | null;
 }

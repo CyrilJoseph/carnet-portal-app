@@ -37,6 +37,11 @@ export class CarnetFeeComponent implements OnInit {
   showForm = false;
   feeTypes: FeeType[] = [];
 
+  readOnlyFields: any = {
+    lastChangedDate: null,
+    lastChangedBy: null
+  };
+
   @Input() isEditMode = false;
   @Input() spid: number = 0;
   @Output() hasFeeCommissions = new EventEmitter<boolean>();
@@ -119,6 +124,9 @@ export class CarnetFeeComponent implements OnInit {
       commissionRate: feeCommission.commissionRate,
       effectiveDate: feeCommission.effectiveDate
     });
+
+    this.readOnlyFields.lastChangedDate = feeCommission.dateCreated;
+    this.readOnlyFields.lastChangedBy = feeCommission.createdBy;
 
     if (this.isEditMode) {
       this.feeCommissionForm.get('feeType')?.disable();

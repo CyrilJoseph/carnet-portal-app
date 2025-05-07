@@ -30,7 +30,9 @@ export class ExpeditedFeeService {
       timeZone: item.TIMEZONE,
       fee: item.FEES,
       effectiveDate: item.EFFDATE,
-      spid: item.SPID
+      spid: item.SPID,
+      createdBy: item.CREATEDBY || null,
+      dateCreated: item.DATECREATED || null
     }));
   }
 

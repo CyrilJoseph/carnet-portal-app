@@ -5,5 +5,7 @@ export interface ContinuationSheetFee {
     effectiveDate: Date;
     customerType: string;
     carnetType: string;
+    dateCreated?: Date | null;
+    createdBy?: string | null;
 }
 

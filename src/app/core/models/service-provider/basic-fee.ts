@@ -5,4 +5,6 @@ export interface BasicFee {
     fees: number;
     effectiveDate: Date;
     spid?: number;
+    dateCreated?: Date | null;
+    createdBy?: string | null;
 }

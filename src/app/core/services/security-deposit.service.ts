@@ -29,7 +29,9 @@ export class SecurityDepositService {
       specialCountry: item.SPCLCOUNTRY,
       rate: item.RATE,
       effectiveDate: item.EFFDATE,
-      spid: item.SPID
+      spid: item.SPID,
+      createdBy: item.CREATEDBY || null,
+      dateCreated: item.DATECREATED || null
     }));
   }
 

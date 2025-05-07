@@ -26,7 +26,9 @@ export class BasicFeeService {
       startCarnetValue: item.STARTCARNETVALUE,
       endCarnetValue: item.ENDCARNETVALUE,
       fees: item.FEES,
-      effectiveDate: item.EFFDATE
+      effectiveDate: item.EFFDATE,
+      createdBy: item.CREATEDBY || null,
+      dateCreated: item.DATECREATED || null      
     }));
   }
 

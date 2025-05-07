@@ -36,6 +36,11 @@ export class ExpeditedFeeComponent implements OnInit, OnDestroy {
   isLoading = false;
   showForm = false;
 
+  readOnlyFields: any = {
+    lastChangedDate: null,
+    lastChangedBy: null
+  };
+
   private destroy$ = new Subject<void>();
 
   @Input() isEditMode = false;
@@ -61,8 +66,8 @@ export class ExpeditedFeeComponent implements OnInit, OnDestroy {
     this.feeForm = this.fb.group({
       customerType: ['PREPARER', Validators.required],
       deliveryType: ['', Validators.required],
-      startTime: ['', Validators.required],
-      endTime: ['', Validators.required],
+      startTime: [0, Validators.required],
+      endTime: [0, Validators.required],
       timeZone: ['', Validators.required],
       fee: [0, [Validators.required, Validators.min(0)]],
       effectiveDate: ['', Validators.required]
@@ -167,6 +172,9 @@ export class ExpeditedFeeComponent implements OnInit, OnDestroy {
       fee: fee.fee,
       effectiveDate: fee.effectiveDate
     });
+
+    this.readOnlyFields.lastChangedDate = fee.dateCreated;
+    this.readOnlyFields.lastChangedBy = fee.createdBy;
 
     if (this.isEditMode) {
       this.feeForm.get('customerType')?.disable();

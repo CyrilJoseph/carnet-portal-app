@@ -7,4 +7,6 @@ export interface CounterfoilFee {
     carnetType: string,
     effectiveDate: Date,
     rate: number,
+    dateCreated?: Date | null;
+    createdBy?: string | null;
 }

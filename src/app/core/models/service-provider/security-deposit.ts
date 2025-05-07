@@ -7,4 +7,6 @@ export interface SecurityDeposit {
     rate: number;
     effectiveDate: Date;
     spid: number;
+    dateCreated?: Date | null;
+    createdBy?: string | null;
 }

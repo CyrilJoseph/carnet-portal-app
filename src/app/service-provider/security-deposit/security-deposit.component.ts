@@ -35,6 +35,11 @@ export class SecurityDepositComponent implements OnInit {
   isLoading = false;
   showForm = false;
 
+  readOnlyFields: any = {
+    lastChangedDate: null,
+    lastChangedBy: null
+  };
+
   countries: Country[] = [];
   //commodities: Commodity[] = [];
 
@@ -152,6 +157,9 @@ export class SecurityDepositComponent implements OnInit {
       rate: deposit.rate,
       effectiveDate: deposit.effectiveDate
     });
+
+    this.readOnlyFields.lastChangedDate = deposit.dateCreated;
+    this.readOnlyFields.lastChangedBy = deposit.createdBy;
 
     if (this.isEditMode) {
       this.depositForm.get('holderType')?.disable();

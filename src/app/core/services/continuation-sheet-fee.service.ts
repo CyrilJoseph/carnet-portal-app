@@ -28,6 +28,8 @@ export class ContinuationSheetFeeService {
       carnetType: item.CARNETTYPE,
       effectiveDate: item.EFFDATE,
       rate: item.RATE,
+      createdBy: item.CREATEDBY || null,
+      dateCreated: item.DATECREATED || null
     }));
   }
 

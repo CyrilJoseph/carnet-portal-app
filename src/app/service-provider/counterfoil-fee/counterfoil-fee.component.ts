@@ -32,6 +32,11 @@ export class CounterfoilFeeComponent implements OnInit {
   isLoading = false;
   showForm = false;
 
+  readOnlyFields: any = {
+    lastChangedDate: null,
+    lastChangedBy: null
+  };
+
   // Dropdown options
   customerTypes = [
     { label: 'Preparer', value: 'PREPARER' },
@@ -143,6 +148,9 @@ export class CounterfoilFeeComponent implements OnInit {
       rate: counterfoil.rate,
       effectiveDate: new Date(counterfoil.effectiveDate)
     });
+
+    this.readOnlyFields.lastChangedDate = counterfoil.dateCreated;
+    this.readOnlyFields.lastChangedBy = counterfoil.createdBy;
 
     if (this.isEditMode) {
       this.counterfoilForm.get('customerType')?.disable();

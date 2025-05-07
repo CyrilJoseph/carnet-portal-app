@@ -113,17 +113,29 @@
             <div class="form-row">
                 <mat-form-field appearance="outline">
                     <mat-label>Start Time</mat-label>
-                    <input matInput formControlName="startTime" required>
+                    <input matInput formControlName="startTime" required min="0" max="24" type="number" step="1">
                     <mat-error *ngIf="feeForm.get('startTime')?.errors?.['required']">
                         Start Time is required
+                    </mat-error>
+                    <mat-error *ngIf="feeForm.get('startTime')?.errors?.['min']">
+                        Start Time must be greater than zero
+                    </mat-error>
+                    <mat-error *ngIf="feeForm.get('startTime')?.errors?.['max']">
+                        Start Time must be less than 24 hours
                     </mat-error>
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
                     <mat-label>End Time</mat-label>
-                    <input matInput formControlName="endTime" required>
+                    <input matInput formControlName="endTime" required min="0" max="24" type="number" step="1">
                     <mat-error *ngIf="feeForm.get('endTime')?.errors?.['required']">
                         End Time is required
+                    </mat-error>
+                    <mat-error *ngIf="feeForm.get('endTime')?.errors?.['min']">
+                        End Time must be greater than zero
+                    </mat-error>
+                    <mat-error *ngIf="feeForm.get('endTime')?.errors?.['max']">
+                        End Time must be less than 24 hours
                     </mat-error>
                 </mat-form-field>
             </div>
@@ -164,6 +176,29 @@
                         Effective date is required
                     </mat-error>
                 </mat-form-field>
+            </div>
+
+            <div *ngIf="isEditing" class="readonly-section">
+                <div class="readonly-fields">
+                    <div class="field-column">
+                        <!-- Last Changed By -->
+                        <div class="readonly-field">
+                            <label>Last Changed By</label>
+                            <div class="readonly-value">
+                                {{readOnlyFields.lastChangedBy || 'N/A'}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field-column">
+                        <!-- Last Changed Date -->
+                        <div class="readonly-field">
+                            <label>Last Changed Date</label>
+                            <div class="readonly-value">
+                                {{(readOnlyFields.lastChangedDate | date:'mediumDate':'UTC') || 'N/A'}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="form-actions">

@@ -27,7 +27,9 @@ export class CarnetFeeService {
       description: item.DESCRIPTION,
       commissionRate: item.COMMRATE,
       effectiveDate: item.EFFDATE,
-      spid: item.SPID
+      spid: item.SPID,
+      createdBy: item.CREATEDBY || null,
+      dateCreated: item.DATECREATED || null
     }));
   }
 

@@ -32,6 +32,11 @@ export class ContinuationSheetFeeComponent implements OnInit {
   isLoading = false;
   showForm = false;
 
+  readOnlyFields: any = {
+    lastChangedDate: null,
+    lastChangedBy: null
+  };
+
   // Dropdown options
   customerTypes = [
     { label: 'Preparer', value: 'PREPARER' },
@@ -123,6 +128,9 @@ export class ContinuationSheetFeeComponent implements OnInit {
       rate: continuationSheet.rate,
       effectiveDate: new Date(continuationSheet.effectiveDate)
     });
+
+    this.readOnlyFields.lastChangedDate = continuationSheet.dateCreated;
+    this.readOnlyFields.lastChangedBy = continuationSheet.createdBy;
 
     if (this.isEditMode) {
       this.continuationSheetForm.get('customerType')?.disable();

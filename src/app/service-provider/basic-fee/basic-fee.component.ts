@@ -33,6 +33,11 @@ export class BasicFeeComponent {
   isLoading = false;
   showForm = false;
 
+  readOnlyFields: any = {
+    lastChangedDate: null,
+    lastChangedBy: null
+  };
+
   @Input() isEditMode = false;
   @Input() spid: number = 0;
   @Output() hasBasicFees = new EventEmitter<boolean>();
@@ -146,6 +151,9 @@ export class BasicFeeComponent {
       fees: fee.fees,
       effectiveDate: fee.effectiveDate
     });
+
+    this.readOnlyFields.lastChangedDate = fee.dateCreated;
+    this.readOnlyFields.lastChangedBy = fee.createdBy;
 
     if (this.isEditMode) {
       this.feeForm.get('startCarnetValue')?.disable();

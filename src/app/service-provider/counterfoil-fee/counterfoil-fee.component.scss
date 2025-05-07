@@ -136,9 +136,42 @@
             ::ng-deep .mat-radio-button.mat-accent .mat-radio-inner-circle {
                 background-color: #3f51b5;
             }
-            
+
             .dollar-prefix {
                 padding-left: 4px;
+            }
+
+            .readonly-section {
+                padding-top: 0.5rem;
+                border-top: 1px solid #eee;
+
+                .readonly-fields {
+                    display: flex;
+                    gap: 2rem;
+
+                    .field-column {
+                        flex: 1;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 1.5rem;
+                    }
+                }
+
+                .readonly-field {
+                    label {
+                        display: block;
+                        font-size: 0.875rem;
+                        color: #666;
+                        margin-bottom: 0.25rem;
+                    }
+
+                    .readonly-value {
+                        padding: 0.25rem;
+                        font-size: 0.9375rem;
+                        display: flex;
+                        align-items: center;
+                    }
+                }
             }
         }
     }
