@@ -1,3 +1,5 @@
+@import 'colors';
+
 .login-container {
     display: flex;
     min-height: 85vh;
@@ -24,7 +26,7 @@
 
         .welcome-title {
             text-align: center;
-            color: #3f51b5;
+            color: $primary-color;
             margin-bottom: 0.5rem;
         }
 
@@ -74,7 +76,7 @@
     .info-section {
         flex: 1;
         padding: 4rem;
-        background-color: #3f51b5;
+        background-color: $primary-color;
         color: white;
         display: flex;
         flex-direction: column;

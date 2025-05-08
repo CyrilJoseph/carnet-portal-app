@@ -46,7 +46,7 @@ export class BasicDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadLookupData();
-    this.spidCreated.emit(this.spid?.toString());
+   // this.spidCreated.emit(this.spid?.toString());
     // Patch edit form data
     if (this.spid > 0) {
       this.basicDetailService.getBasicDetailsById(this.spid).subscribe({
