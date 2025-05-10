@@ -12,6 +12,7 @@ import { of } from 'rxjs';
 import { CustomPaginator } from '../../shared/custom-paginator';
 import { ContinuationSheetFeeService } from '../../core/services/continuation-sheet-fee.service';
 import { ApiErrorHandlerService } from '../../core/services/api-error-handler.service';
+import { UserPreferences } from '../../core/models/user-preference';
 
 @Component({
   selector: 'app-continuation-sheet-fee',
@@ -51,6 +52,7 @@ export class ContinuationSheetFeeComponent implements OnInit {
 
   @Input() isEditMode = false;
   @Input() spid: number = 0;
+  @Input() userPreferences!: UserPreferences;
   @Output() hasContinuationSheetFee = new EventEmitter<boolean>();
 
   constructor(
@@ -116,6 +118,9 @@ export class ContinuationSheetFeeComponent implements OnInit {
       customerType: 'PREPARER',
       carnetType: 'ORIGINAL'
     });
+
+    this.continuationSheetForm.get('customerType')?.enable();
+    this.continuationSheetForm.get('carnetType')?.enable();
   }
 
   editContinuationSheet(continuationSheet: any): void {
@@ -146,8 +151,7 @@ export class ContinuationSheetFeeComponent implements OnInit {
 
     const continuationSheetData = {
       ...this.continuationSheetForm.value,
-      spid: this.spid,
-      effectiveDate: this.continuationSheetForm.value.effectiveDate.toISOString()
+      spid: this.spid
     };
 
     const saveObservable = this.isEditing && this.currentContinuationSheetId

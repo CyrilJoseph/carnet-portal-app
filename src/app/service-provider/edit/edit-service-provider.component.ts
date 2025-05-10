@@ -1,4 +1,4 @@
-import { Component, viewChild } from '@angular/core';
+import { afterNextRender, Component, viewChild } from '@angular/core';
 import { AngularMaterialModule } from '../../shared/module/angular-material.module';
 import { MatAccordion } from '@angular/material/expansion';
 import { BasicDetailsComponent } from '../basic-details/basic-details.component';
@@ -11,6 +11,8 @@ import { CounterfoilFeeComponent } from "../counterfoil-fee/counterfoil-fee.comp
 import { ContinuationSheetFeeComponent } from "../continuation-sheet-fee/continuation-sheet-fee.component";
 import { ExpeditedFeeComponent } from "../expedited-fee/expedited-fee.component";
 import { SecurityDepositComponent } from "../security-deposit/security-deposit.component";
+import { UserPreferences } from '../../core/models/user-preference';
+import { UserPreferencesService } from '../../core/services/user-preference.service';
 
 @Component({
   selector: 'app-edit-service-provider',
@@ -22,17 +24,23 @@ export class EditServiceProviderComponent {
   accordion = viewChild.required(MatAccordion);
   isEditMode = true;
   spid = 0;
+  serviceProviderName: string | null = null;
+  userPreferences: UserPreferences;
 
-  constructor(private route: ActivatedRoute) { }
+  constructor(private route: ActivatedRoute, private userPrefenceService: UserPreferencesService) {
+    this.userPreferences = userPrefenceService.getPreferences();
+    afterNextRender(() => {
+      // Open all panels
+      this.accordion().openAll();
+    });
+  }
 
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
     this.spid = idParam ? parseInt(idParam, 10) : 0;
-    this.accordion().openAll();
   }
 
-  ngAfterViewInit() {
-    // Open all panels
-    this.accordion().openAll();
+  onServiceProviderNameUpdate(event: string): void {
+    this.serviceProviderName = event;
   }
 }

@@ -55,8 +55,8 @@
             </tr>
         </table>
 
-        <mat-paginator [length]="dataSource.data.length" [pageSizeOptions]="[5, 10, 25, 100]"
-            showFirstLastButtons></mat-paginator>
+        <mat-paginator [length]="dataSource.data.length" [pageSizeOptions]="[userPreferences.pageSize!]"
+            [hidePageSize]="true" showFirstLastButtons></mat-paginator>
     </div>
 
     <!-- Fee & Commission Form -->
@@ -99,7 +99,7 @@
                     </mat-error>
                 </mat-form-field>
             </div>
-            
+
             <div *ngIf="isEditing" class="readonly-section">
                 <div class="readonly-fields">
                     <div class="field-column">

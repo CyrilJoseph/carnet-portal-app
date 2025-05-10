@@ -1,3 +1,11 @@
+@import 'colors';
+
+.page-header {
+    margin: 0.5rem 0px;
+    color: $primary-color;
+    font-weight: 500;
+}
+
 .service-provider-action-buttons {
     padding-bottom: 20px;
 }

@@ -136,11 +136,45 @@
                     </mat-form-field>
                 </div>
 
-                <!-- hidden controls for edit-->
-                <input type="hidden" formControlName="cargoSurety">
-                <input type="hidden" formControlName="cargoPolicyNo">
-                <input type="hidden" formControlName="bondSurety">
-                
+                <div class="form-row">
+                    <mat-form-field appearance="outline" class="cargo-surety">
+                        <mat-label>Cargo Surety</mat-label>
+                        <mat-select formControlName="cargoSurety" required>
+                            <mat-option *ngFor="let cargoSurety of cargoSuretys" [value]="cargoSurety.value">
+                                {{ cargoSurety.name }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="f['cargoSurety'].errors?.['required']">
+                            Cargo Surety is required
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="cargo-policy">
+                        <mat-label>Cargo Policy</mat-label>
+                        <mat-select formControlName="cargoPolicyNo" required>
+                            <mat-option *ngFor="let cargoPolicy of cargoPolicies" [value]="cargoPolicy.value">
+                                {{ cargoPolicy.name }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="f['cargoPolicyNo'].errors?.['required']">
+                            Cargo Policy is required
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="bond-surety">
+                        <mat-label>Bond Surety</mat-label>
+                        <mat-select formControlName="bondSurety" required>
+                            <mat-option *ngFor="let bondSurety of bondSuretys" [value]="bondSurety.value">
+                                {{ bondSurety.name }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="f['bondSurety'].errors?.['required']">
+                            Bond Surety is required
+                        </mat-error>
+                    </mat-form-field>
+
+                </div>
+
                 <div class="form-actions">
                     <button mat-raised-button color="primary" type="submit" [disabled]="basicDetailsForm.invalid">
                         Save

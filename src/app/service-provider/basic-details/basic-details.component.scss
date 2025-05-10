@@ -99,6 +99,12 @@
             .replacement-region {
                 grid-column: span 1;
             }
+
+            .cargo-surety,
+            .cargo-policy,
+            .bond-surety {
+                grid-column: span 1;
+            }
         }
 
         .form-actions {
@@ -133,7 +139,10 @@
                 .state,
                 .zip,
                 .issuing-region,
-                .replacement-region {
+                .replacement-region,
+                .cargo-surety,
+                .cargo-policy,
+                .bond-surety {
                     grid-column: span 1;
                 }
             }

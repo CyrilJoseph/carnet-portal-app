@@ -15,6 +15,7 @@ import { CarnetFee } from '../../core/models/service-provider/carnet-fee';
 import { FeeType } from '../../core/models/fee-type';
 import { CarnetFeeService } from '../../core/services/carnet-fee.service';
 import { ApiErrorHandlerService } from '../../core/services/api-error-handler.service';
+import { UserPreferences } from '../../core/models/user-preference';
 
 @Component({
   selector: 'app-carnet-fee',
@@ -43,6 +44,7 @@ export class CarnetFeeComponent implements OnInit {
   };
 
   @Input() isEditMode = false;
+  @Input() userPreferences!: UserPreferences;
   @Input() spid: number = 0;
   @Output() hasFeeCommissions = new EventEmitter<boolean>();
 

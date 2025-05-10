@@ -13,6 +13,7 @@ import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/c
 import { CustomPaginator } from '../../shared/custom-paginator';
 import { forkJoin } from 'rxjs';
 import { ApiErrorHandlerService } from '../../core/services/api-error-handler.service';
+import { UserPreferences } from '../../core/models/user-preference';
 
 @Component({
   selector: 'app-basic-fee',
@@ -39,6 +40,7 @@ export class BasicFeeComponent {
   };
 
   @Input() isEditMode = false;
+  @Input() userPreferences!: UserPreferences;
   @Input() spid: number = 0;
   @Output() hasBasicFees = new EventEmitter<boolean>();
 

@@ -1,6 +1,6 @@
 <div class="counterfoil-container">
     <div class="actions-bar">
-        <button mat-raised-button color="primary" *ngIf="!isEditMode" (click)="addNewCounterfoil()">
+        <button mat-raised-button color="primary" (click)="addNewCounterfoil()">
             <mat-icon>add</mat-icon> Add New Counterfoil
         </button>
     </div>
@@ -77,8 +77,8 @@
             </tr>
         </table>
 
-        <mat-paginator [length]="dataSource.data.length" [pageSizeOptions]="[5, 10, 25, 100]"
-            showFirstLastButtons></mat-paginator>
+        <mat-paginator [length]="dataSource.data.length" [pageSizeOptions]="[userPreferences.pageSize!]"
+            [hidePageSize]="true" showFirstLastButtons></mat-paginator>
     </div>
 
     <!-- Counterfoil Form -->

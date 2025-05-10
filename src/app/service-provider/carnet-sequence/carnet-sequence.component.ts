@@ -15,6 +15,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { CustomPaginator } from '../../shared/custom-paginator';
 import { CarnetSequenceService } from '../../core/services/carnet-sequence.service';
 import { ApiErrorHandlerService } from '../../core/services/api-error-handler.service';
+import { UserPreferences } from '../../core/models/user-preference';
 
 @Component({
   selector: 'app-carnet-sequence',
@@ -41,6 +42,7 @@ export class CarnetSequenceComponent implements OnInit {
   ];
 
   @Input() spid: number = 0;
+  @Input() userPreferences!: UserPreferences;
   @Input() isEditMode = false;
   @Output() hasCarnetSequence = new EventEmitter<boolean>();
 

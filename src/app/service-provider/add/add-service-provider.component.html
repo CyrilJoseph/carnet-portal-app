@@ -18,7 +18,7 @@
         <mat-step [completed]="contactsCompleted" [editable]="!!serviceProviderId && basicDetailsCompleted">
             <ng-template matStepLabel>Contacts</ng-template>
 
-            <app-contacts *ngIf="serviceProviderId" [spid]="serviceProviderId" (hasContacts)="onContactsSaved($event)">
+            <app-contacts *ngIf="serviceProviderId" [spid]="serviceProviderId" (hasContacts)="onContactsSaved($event)" [userPreferences]="userPreferences">
             </app-contacts>
         </mat-step>
 
@@ -27,7 +27,7 @@
             <ng-template matStepLabel>Carnet Sequence</ng-template>
 
             <app-carnet-sequence *ngIf="serviceProviderId" [spid]="serviceProviderId"
-                (hasCarnetSequence)="onCarnetSequenceSaved($event)"></app-carnet-sequence>
+                (hasCarnetSequence)="onCarnetSequenceSaved($event)" [userPreferences]="userPreferences"></app-carnet-sequence>
         </mat-step>
 
         <!-- Fees & Commission Step -->
@@ -36,7 +36,7 @@
             <ng-template matStepLabel>Carnet Fee & Commission Setup</ng-template>
 
             <app-carnet-fee *ngIf="serviceProviderId" [spid]="serviceProviderId"
-                (hasFeeCommissions)="onFeeCommissionSaved($event)"></app-carnet-fee>
+                (hasFeeCommissions)="onFeeCommissionSaved($event)" [userPreferences]="userPreferences"></app-carnet-fee>
         </mat-step>
 
         <!-- Basic Fee Step -->
@@ -45,7 +45,7 @@
             <ng-template matStepLabel>Basic Fee Setup</ng-template>
 
             <app-basic-fee *ngIf="serviceProviderId" [spid]="serviceProviderId"
-                (hasBasicFees)="onBasicFeeSaved($event)"></app-basic-fee>
+                (hasBasicFees)="onBasicFeeSaved($event)" [userPreferences]="userPreferences"></app-basic-fee>
         </mat-step>
 
         <!-- Counterfoil Fee Step -->
@@ -53,7 +53,7 @@
             <ng-template matStepLabel>Counterfoil Setup</ng-template>
 
             <app-counterfoil-fee *ngIf="serviceProviderId" [spid]="serviceProviderId"
-                (hasCounterFoilFee)="onCounterfoilFeeSaved($event)"></app-counterfoil-fee>
+                (hasCounterFoilFee)="onCounterfoilFeeSaved($event)" [userPreferences]="userPreferences"></app-counterfoil-fee>
         </mat-step>
 
         <!-- Continuation Sheet Fee Step -->
@@ -62,7 +62,7 @@
             <ng-template matStepLabel>Continuation Sheet Fee Setup</ng-template>
 
             <app-continuation-sheet-fee *ngIf="serviceProviderId" [spid]="serviceProviderId"
-                (hasContinuationSheetFee)="onContinuationSheetFeeSaved($event)"></app-continuation-sheet-fee>
+                (hasContinuationSheetFee)="onContinuationSheetFeeSaved($event)" [userPreferences]="userPreferences"></app-continuation-sheet-fee>
         </mat-step>
 
         <!-- Expedited Fee Step -->
@@ -70,7 +70,7 @@
             <ng-template matStepLabel>Expedited Fee Setup</ng-template>
 
             <app-expedited-fee *ngIf="serviceProviderId" [spid]="serviceProviderId"
-                (hasExpeditedFees)="onExpeditedFeeSaved($event)"></app-expedited-fee>
+                (hasExpeditedFees)="onExpeditedFeeSaved($event)" [userPreferences]="userPreferences"></app-expedited-fee>
         </mat-step>
 
         <!-- Security Deposit Step -->
@@ -78,7 +78,7 @@
             <ng-template matStepLabel>Security Deposit</ng-template>
 
             <app-security-deposit *ngIf="serviceProviderId" [spid]="serviceProviderId"
-                (hasSecurityDeposits)="onSecurityDepositSaved($event)"></app-security-deposit>
+                (hasSecurityDeposits)="onSecurityDepositSaved($event)" [userPreferences]="userPreferences"></app-security-deposit>
         </mat-step>
 
     </mat-stepper>

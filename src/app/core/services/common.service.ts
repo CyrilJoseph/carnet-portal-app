@@ -8,7 +8,8 @@ import { environment } from '../../../environments/environment';
 import { Commodity } from '../models/commodity';
 import { DeliveryType } from '../models/delivery-type';
 import { FeeType } from '../models/fee-type';
-import { TimeZone } from '../models/TimeZone';
+import { TimeZone } from '../models/timezone';
+import { BondSurety } from '../models/bond-surety';
 
 @Injectable({
   providedIn: 'root'
@@ -98,6 +99,42 @@ export class CommonService {
 
   getFeeTypes(spid: number = 0): Observable<FeeType[]> {
     return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetParamValues?P_PARAMTYPE=009&P_SPID=0`).pipe(
+      map((response) =>
+        response.map((item) => ({
+          name: item.PARAMDESC,
+          id: item.PARAMID,
+          value: item.PARAMVALUE
+        }))
+      )
+    );
+  }
+
+  getBondSuretys(spid: number = 0): Observable<BondSurety[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetParamValues?P_PARAMTYPE=003&P_SPID=0`).pipe(
+      map((response) =>
+        response.map((item) => ({
+          name: item.PARAMDESC,
+          id: item.PARAMID,
+          value: item.PARAMVALUE
+        }))
+      )
+    );
+  }
+
+  getCargoPolicies(spid: number = 0): Observable<FeeType[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetParamValues?P_PARAMTYPE=004&P_SPID=0`).pipe(
+      map((response) =>
+        response.map((item) => ({
+          name: item.PARAMDESC,
+          id: item.PARAMID,
+          value: item.PARAMVALUE
+        }))
+      )
+    );
+  }
+
+  getCargoSuretys(spid: number = 0): Observable<FeeType[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetParamValues?P_PARAMTYPE=005&P_SPID=0`).pipe(
       map((response) =>
         response.map((item) => ({
           name: item.PARAMDESC,

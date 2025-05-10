@@ -12,6 +12,7 @@ import { CounterfoilFee } from '../../core/models/service-provider/counterfoil-f
 import { CustomPaginator } from '../../shared/custom-paginator';
 import { CounterfoilFeeService } from '../../core/services/counterfoil-fee.service';
 import { ApiErrorHandlerService } from '../../core/services/api-error-handler.service';
+import { UserPreferences } from '../../core/models/user-preference';
 
 @Component({
   selector: 'app-counterfoil-fee',
@@ -51,6 +52,7 @@ export class CounterfoilFeeComponent implements OnInit {
 
   @Input() isEditMode = false;
   @Input() spid: number = 0;
+  @Input() userPreferences!: UserPreferences;
   @Output() hasCounterFoilFee = new EventEmitter<boolean>();
 
   constructor(
@@ -134,6 +136,11 @@ export class CounterfoilFeeComponent implements OnInit {
       customerType: 'PREPARER',
       carnetType: 'ORIGINAL'
     });
+
+    this.counterfoilForm.get('customerType')?.enable();
+    this.counterfoilForm.get('carnetType')?.enable();
+    this.counterfoilForm.get('startSets')?.enable();
+    this.counterfoilForm.get('endSets')?.enable();
   }
 
   editCounterfoil(counterfoil: any): void {

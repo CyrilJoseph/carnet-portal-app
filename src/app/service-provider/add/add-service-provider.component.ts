@@ -11,6 +11,8 @@ import { CounterfoilFeeComponent } from '../counterfoil-fee/counterfoil-fee.comp
 import { ExpeditedFeeComponent } from '../expedited-fee/expedited-fee.component';
 import { SecurityDepositComponent } from '../security-deposit/security-deposit.component';
 import { ContinuationSheetFeeComponent } from "../continuation-sheet-fee/continuation-sheet-fee.component";
+import { UserPreferencesService } from '../../core/services/user-preference.service';
+import { UserPreferences } from '../../core/models/user-preference';
 
 @Component({
   selector: 'app-add-service-provider',
@@ -24,6 +26,7 @@ export class AddServiceProviderComponent {
   serviceProviderId: number | null = null;
   currentStep: number = 0;
   isLoading: boolean = false;
+  userPreferences: UserPreferences;
 
   basicDetailsCompleted: boolean = false;
   contactsCompleted: boolean = false;
@@ -34,6 +37,10 @@ export class AddServiceProviderComponent {
   continuationSheetFeeCompleted: boolean = false;
   expeditedFeeCompleted: boolean = false;
   securityDepositCompleted: boolean = false;
+
+  constructor(private userPrefenceService: UserPreferencesService) {
+    this.userPreferences = userPrefenceService.getPreferences();
+  }
 
   onBasicDetailsSaved(event: string): void {
     this.serviceProviderId = +event;

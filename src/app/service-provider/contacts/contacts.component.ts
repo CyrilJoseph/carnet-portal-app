@@ -13,6 +13,7 @@ import { CommonModule } from '@angular/common';
 import { CustomPaginator } from '../../shared/custom-paginator';
 import { ContactService } from '../../core/services/contact.service';
 import { ApiErrorHandlerService } from '../../core/services/api-error-handler.service';
+import { UserPreferences } from '../../core/models/user-preference';
 
 @Component({
   selector: 'app-contacts',
@@ -41,6 +42,7 @@ export class ContactsComponent implements OnInit {
   };
 
   @Input() spid: number = 0;
+  @Input() userPreferences: UserPreferences = {};
   @Output() hasContacts = new EventEmitter<boolean>();
 
   constructor(

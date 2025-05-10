@@ -13,6 +13,9 @@ import { NotificationService } from '../../core/services/notification.service';
 import { ZipCodeValidator } from '../../shared/validators/zipcode-validator';
 import { BasicDetailService } from '../../core/services/basic-detail.service';
 import { ApiErrorHandlerService } from '../../core/services/api-error-handler.service';
+import { BondSurety } from '../../core/models/bond-surety';
+import { CargoSurety } from '../../core/models/cargo-surety';
+import { CargoPolicy } from '../../core/models/cargo-policy';
 
 @Component({
   selector: 'app-basic-details',
@@ -24,11 +27,16 @@ export class BasicDetailsComponent implements OnInit, OnDestroy {
   @Input() isEditMode = false;
   @Input() spid: number = 0;
   @Output() spidCreated = new EventEmitter<string>();
+  @Output() serviceProviderName = new EventEmitter<string>();
 
   basicDetailsForm: FormGroup;
   countries: Country[] = [];
   regions: Region[] = [];
   states: State[] = [];
+  bondSuretys: BondSurety[] = [];
+  cargoSuretys: CargoSurety[] = [];
+  cargoPolicies: CargoPolicy[] = [];
+
   isLoading = true;
   countriesHasStates = ['US', 'CA', 'MX'];
 
@@ -46,13 +54,14 @@ export class BasicDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadLookupData();
-   // this.spidCreated.emit(this.spid?.toString());
+    // this.spidCreated.emit(this.spid?.toString());
     // Patch edit form data
     if (this.spid > 0) {
       this.basicDetailService.getBasicDetailsById(this.spid).subscribe({
         next: (basicDetail: BasicDetail) => {
           if (basicDetail?.spid > 0) {
             this.patchFormData(basicDetail);
+            this.serviceProviderName.emit(basicDetail.companyName);
           }
           this.isLoading = false;
         },
@@ -83,9 +92,9 @@ export class BasicDetailsComponent implements OnInit, OnDestroy {
       zip: ['', [Validators.required, ZipCodeValidator('country')]],
       issuingRegion: ['', Validators.required],
       replacementRegion: ['', Validators.required],
-      cargoSurety: [''],
-      cargoPolicyNo: [''],
-      bondSurety: ['']
+      cargoSurety: ['', Validators.required],
+      cargoPolicyNo: ['', Validators.required],
+      bondSurety: ['', Validators.required]
     });
   }
 
@@ -103,6 +112,9 @@ export class BasicDetailsComponent implements OnInit, OnDestroy {
       });
 
     this.loadRegions();
+    this.loadCargoSuretys();
+    this.loadCargoPolicies();
+    this.loadBondSuretys();
   }
 
   loadRegions(): void {
@@ -144,6 +156,51 @@ export class BasicDetailsComponent implements OnInit, OnDestroy {
       });
   }
 
+  loadBondSuretys(): void {
+    this.commonService.getBondSuretys()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (bondSuretys) => {
+          this.bondSuretys = bondSuretys;
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Failed to load bond suretys', error);
+          this.isLoading = false;
+        }
+      });
+  }
+
+  loadCargoSuretys(): void {
+    this.commonService.getCargoSuretys()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (cargoSuretys) => {
+          this.cargoSuretys = cargoSuretys;
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Failed to load cargo suretys', error);
+          this.isLoading = false;
+        }
+      });
+  }
+
+  loadCargoPolicies(): void {
+    this.commonService.getCargoPolicies()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (cargoPolicies) => {
+          this.cargoPolicies = cargoPolicies;
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Failed to load cargo policies', error);
+          this.isLoading = false;
+        }
+      });
+  }
+
   patchFormData(data: BasicDetail): void {
     this.basicDetailsForm.patchValue({
       companyName: data.companyName,
@@ -168,6 +225,9 @@ export class BasicDetailsComponent implements OnInit, OnDestroy {
     if (this.isEditMode) {
       this.basicDetailsForm.get('issuingRegion')?.disable();
       this.basicDetailsForm.get('replacementRegion')?.disable();
+      this.basicDetailsForm.get('companyName')?.disable();
+      this.basicDetailsForm.get('cargoSurety')?.disable();
+      this.basicDetailsForm.get('bondSurety')?.disable();
     }
   }
 
@@ -197,15 +257,14 @@ export class BasicDetailsComponent implements OnInit, OnDestroy {
     // states
     basicDetailData.state = this.basicDetailsForm.get('state')?.value;
 
-    // regions
+    // non editable fields values
     if (this.isEditMode) {
       basicDetailData.issuingRegion = this.basicDetailsForm.get('issuingRegion')?.value;
       basicDetailData.replacementRegion = this.basicDetailsForm.get('replacementRegion')?.value;
+      basicDetailData.companyName = this.basicDetailsForm.get('companyName')?.value;
+      basicDetailData.cargoSurety = this.basicDetailsForm.get('cargoSurety')?.value;
+      basicDetailData.bondSurety = this.basicDetailsForm.get('bondSurety')?.value;
     }
-
-    basicDetailData.cargoSurety = basicDetailData.cargoSurety ?? '';
-    basicDetailData.cargoPolicyNo = basicDetailData.cargoPolicyNo ?? '';
-    basicDetailData.bondSurety = basicDetailData.bondSurety ?? '';
 
     const saveObservable = this.isEditMode && this.spid > 0
       ? this.basicDetailService.updateBasicDetails(this.spid, basicDetailData)

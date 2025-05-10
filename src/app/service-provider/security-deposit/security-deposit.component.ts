@@ -15,6 +15,7 @@ import { CommonService } from '../../core/services/common.service';
 import { SecurityDeposit } from '../../core/models/service-provider/security-deposit';
 import { SecurityDepositService } from '../../core/services/security-deposit.service';
 import { ApiErrorHandlerService } from '../../core/services/api-error-handler.service';
+import { UserPreferences } from '../../core/models/user-preference';
 
 @Component({
   selector: 'app-security-deposit',
@@ -45,6 +46,7 @@ export class SecurityDepositComponent implements OnInit {
 
   @Input() isEditMode = false;
   @Input() spid: number = 0;
+  @Input() userPreferences!: UserPreferences;
   @Output() hasSecurityDeposits = new EventEmitter<boolean>();
 
   holderTypes = [
@@ -143,6 +145,11 @@ export class SecurityDepositComponent implements OnInit {
       uscibMember: 'N',
     });
     this.depositForm.patchValue({ rate: 0 });
+
+    this.depositForm.get('holderType')?.enable();
+    this.depositForm.get('uscibMember')?.enable();
+    this.depositForm.get('specialCommodity')?.enable();
+    this.depositForm.get('specialCountry')?.enable();
   }
 
   editDeposit(deposit: SecurityDeposit): void {

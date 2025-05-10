@@ -11,11 +11,13 @@ import { CommonModule } from '@angular/common';
 import { CustomPaginator } from '../../shared/custom-paginator';
 import { ExpeditedFee } from '../../core/models/service-provider/expedited-fee';
 import { DeliveryType } from '../../core/models/delivery-type';
-import { TimeZone } from '../../core/models/TimeZone';
+import { TimeZone } from '../../core/models/timezone';
 import { CommonService } from '../../core/services/common.service';
 import { Subject, takeUntil } from 'rxjs';
 import { ExpeditedFeeService } from '../../core/services/expedited-fee.service';
 import { ApiErrorHandlerService } from '../../core/services/api-error-handler.service';
+import { TimeFormatService } from '../../core/services/timeformat.service';
+import { UserPreferences } from '../../core/models/user-preference';
 
 @Component({
   selector: 'app-expedited-fee',
@@ -28,7 +30,7 @@ export class ExpeditedFeeComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  displayedColumns: string[] = ['customerType', 'deliveryType', 'time', 'timeZone', 'fee', 'effectiveDate', 'actions'];
+  displayedColumns: string[] = ['customerType', 'deliveryType', 'time', 'fee', 'effectiveDate', 'actions'];
   dataSource = new MatTableDataSource<any>();
   feeForm: FormGroup;
   isEditing = false;
@@ -45,6 +47,7 @@ export class ExpeditedFeeComponent implements OnInit, OnDestroy {
 
   @Input() isEditMode = false;
   @Input() spid: number = 0;
+  @Input() userPreferences!: UserPreferences;
   @Output() hasExpeditedFees = new EventEmitter<boolean>();
 
   customerTypes = [
@@ -61,13 +64,14 @@ export class ExpeditedFeeComponent implements OnInit, OnDestroy {
     private notificationService: NotificationService,
     private commonService: CommonService,
     private dialog: MatDialog,
-    private errorHandler: ApiErrorHandlerService
+    private errorHandler: ApiErrorHandlerService,
+    private timeFormatHelper: TimeFormatService
   ) {
     this.feeForm = this.fb.group({
       customerType: ['PREPARER', Validators.required],
       deliveryType: ['', Validators.required],
       startTime: [0, Validators.required],
-      endTime: [0, Validators.required],
+      endTime: [0],
       timeZone: ['', Validators.required],
       fee: [0, [Validators.required, Validators.min(0)]],
       effectiveDate: ['', Validators.required]
@@ -157,6 +161,12 @@ export class ExpeditedFeeComponent implements OnInit, OnDestroy {
       customerType: 'PREPARER'
     });
     this.feeForm.patchValue({ fee: 0 });
+
+    this.feeForm.get('customerType')?.enable();
+    this.feeForm.get('deliveryType')?.enable();
+    this.feeForm.get('startTime')?.enable();
+    this.feeForm.get('endTime')?.enable();
+    this.feeForm.get('timeZone')?.enable();
   }
 
   editFee(fee: ExpeditedFee): void {
@@ -256,8 +266,7 @@ export class ExpeditedFeeComponent implements OnInit, OnDestroy {
     return delivery ? delivery.name : value;
   }
 
-  getTimeZoneLabel(value: string): string {
-    const tz = this.timeZones.find(t => t.value === value);
-    return tz ? tz.name : value;
+  getTimeLabel(startTime: string, endTime: string, timeZone: string): string {
+    return this.timeFormatHelper.formatTimeRange(startTime, timeZone, endTime); // "4-6pm EST"
   }
 }
