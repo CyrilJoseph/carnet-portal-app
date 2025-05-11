@@ -108,13 +108,11 @@ export class BasicFeeComponent {
     // Execute all creations in parallel and wait for all to complete
     forkJoin(creationObservables).subscribe({
       next: () => {
-        //this.notificationService.showSuccess('Default fees initialized successfully');
         this.loadBasicFees(); // Refresh the list after all creations are done
         this.isLoading = false;
       },
       error: (error) => {
         this.isLoading = false;
-        // this.notificationService.showError('Failed to initialize some default fees');
         console.error('Error initializing default fees:', error);
         // Even if some failed, try to load what was created
         this.loadBasicFees();
@@ -132,16 +130,16 @@ export class BasicFeeComponent {
     return null;
   }
 
-  addNewFee(): void {
-    this.showForm = true;
-    this.isEditing = false;
-    this.currentFeeId = null;
-    this.feeForm.reset({
-      startCarnetValue: 0,
-      endCarnetValue: null,
-      fees: 0
-    });
-  }
+  // addNewFee(): void {
+  //   this.showForm = true;
+  //   this.isEditing = false;
+  //   this.currentFeeId = null;
+  //   this.feeForm.reset({
+  //     startCarnetValue: 0,
+  //     endCarnetValue: null,
+  //     fees: 0
+  //   });
+  // }
 
   editFee(fee: BasicFee): void {
     this.showForm = true;

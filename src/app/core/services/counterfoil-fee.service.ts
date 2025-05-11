@@ -66,5 +66,4 @@ export class CounterfoilFeeService {
   // deleteCounterfoil(id: string): Observable<void> {
   //   return this.http.delete<void>(`${this.apiUrl}/${this.apiDb}/InactivateSPContact/${id}`);
   // }
-
 }

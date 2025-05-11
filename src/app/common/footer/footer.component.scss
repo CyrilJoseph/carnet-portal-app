@@ -4,7 +4,6 @@
     background-color: $background-header;
     padding: 8px;
     border-top: 1px solid $divider-color;
-    //margin-top: auto; // Pushes footer to bottom
     backdrop-filter: blur(10px);
     background-color: rgba($background-header, 0.9);
 
@@ -24,25 +23,6 @@
         align-items: center;
         gap: 8px;
     }
-
-    // .social-links {
-    //     display: flex;
-    //     gap: 16px;
-
-    //     .social-icon {
-    //         color: $text-secondary;
-    //         transition: color 0.3s ease;
-
-    //         &:hover {
-    //             color: $primary-color;
-    //         }
-
-    //         mat-icon {
-    //             width: 24px;
-    //             height: 24px;
-    //         }
-    //     }
-    // }
 
     .footer-links {
         display: flex;

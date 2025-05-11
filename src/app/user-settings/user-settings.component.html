@@ -12,7 +12,6 @@
                     <div class="label">Items per page:</div>
                     <div class="control">
                         <mat-form-field appearance="outline" class="pageSize">
-                            <!-- <mat-label>Page Size</mat-label> -->
                             <mat-select formControlName="pageSize" required>
                                 <mat-option *ngFor="let size of pageSizeOptions" [value]="size">
                                     {{ size }}

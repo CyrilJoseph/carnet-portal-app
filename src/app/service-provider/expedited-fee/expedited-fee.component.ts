@@ -96,7 +96,6 @@ export class ExpeditedFeeComponent implements OnInit, OnDestroy {
   loadExpeditedFees(): void {
     this.isLoading = true;
 
-    // Replace with actual API call
     this.expeditedFeeService.getExpeditedFees(this.spid).subscribe({
       next: (fees: ExpeditedFee[]) => {
         this.dataSource.data = fees;
@@ -144,14 +143,15 @@ export class ExpeditedFeeComponent implements OnInit, OnDestroy {
         }
       });
   }
-  applyFilter(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+  
+  // applyFilter(event: Event): void {
+  //   const filterValue = (event.target as HTMLInputElement).value;
+  //   this.dataSource.filter = filterValue.trim().toLowerCase();
 
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-  }
+  //   if (this.dataSource.paginator) {
+  //     this.dataSource.paginator.firstPage();
+  //   }
+  // }
 
   addNewFee(): void {
     this.showForm = true;
@@ -267,6 +267,6 @@ export class ExpeditedFeeComponent implements OnInit, OnDestroy {
   }
 
   getTimeLabel(startTime: string, endTime: string, timeZone: string): string {
-    return this.timeFormatHelper.formatTimeRange(startTime, timeZone, endTime); // "4-6pm EST"
+    return this.timeFormatHelper.formatTimeRange(startTime, timeZone, endTime);
   }
 }

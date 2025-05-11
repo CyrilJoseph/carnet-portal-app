@@ -91,7 +91,6 @@
             </div>
 
             <div class="form-row">
-                <!-- <mat-form-field appearance="outline"> -->
                 <mat-label>Holder Type</mat-label>
                 <mat-radio-group formControlName="holderType" required class="horizontal-group">
                     <mat-radio-button *ngFor="let type of holderTypes" [value]="type.value" class="radio-button">
@@ -101,11 +100,9 @@
                 <mat-error *ngIf="depositForm.get('holderType')?.errors?.['required']">
                     Holder type is required
                 </mat-error>
-                <!-- </mat-form-field> -->
             </div>
 
             <div class="form-row">
-                <!-- <mat-form-field appearance="outline"> -->
                 <mat-label>USCIB Member</mat-label>
                 <mat-radio-group formControlName="uscibMember" required class="horizontal-group">
                     <mat-radio-button *ngFor="let type of yesNoOptions" [value]="type.value" class="radio-button">
@@ -115,18 +112,11 @@
                 <mat-error *ngIf="depositForm.get('uscibMember')?.errors?.['required']">
                     USCIB Member status is required
                 </mat-error>
-                <!-- </mat-form-field> -->
             </div>
 
             <div class="form-row">
                 <mat-form-field appearance="outline">
                     <mat-label>Special Commodity</mat-label>
-                    <!-- <mat-select formControlName="specialCommodity">
-                        <mat-option>None</mat-option>
-                        <mat-option *ngFor="let commodity of commodities" [value]="commodity.value">
-                            {{ commodity.name }}
-                        </mat-option>
-                    </mat-select> -->
                     <input matInput formControlName="specialCommodity">
                 </mat-form-field>
 

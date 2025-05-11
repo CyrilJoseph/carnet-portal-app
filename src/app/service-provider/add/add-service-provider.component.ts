@@ -38,14 +38,13 @@ export class AddServiceProviderComponent {
   expeditedFeeCompleted: boolean = false;
   securityDepositCompleted: boolean = false;
 
-  constructor(private userPrefenceService: UserPreferencesService) {
+  constructor(userPrefenceService: UserPreferencesService) {
     this.userPreferences = userPrefenceService.getPreferences();
   }
 
   onBasicDetailsSaved(event: string): void {
     this.serviceProviderId = +event;
     this.basicDetailsCompleted = true;
-    // this.currentStep = 1;
   }
 
   onContactsSaved(event: boolean): void {

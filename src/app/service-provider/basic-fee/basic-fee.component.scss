@@ -7,15 +7,6 @@
     flex-direction: column;
     gap: 24px;
 
-    // .actions-bar {
-    //     clear: both;
-    //     margin-bottom: -16px;
-
-    //     button {
-    //         float: right;
-    //     }
-    // }
-
     .table-container {
         position: relative;
         overflow: auto;
@@ -44,11 +35,6 @@
                 &:hover {
                     transform: scale(1.1);
                 }
-            }
-
-            .mat-column-actions {
-                width: 120px;
-                text-align: center;
             }
         }
 

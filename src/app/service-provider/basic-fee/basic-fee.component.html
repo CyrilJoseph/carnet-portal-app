@@ -1,13 +1,4 @@
 <div class="basic-fee-container">
-    <!-- <div class="actions-bar">
-        <button mat-raised-button color="primary" *ngIf="!isEditMode && dataSource.data.length === 0"
-            (click)="initializeDefaultFees()">
-            <mat-icon>add</mat-icon> Initialize Default Fees
-        </button>
-        <button mat-raised-button color="primary" *ngIf="!isEditMode" (click)="saveFees()">
-            <mat-icon>add</mat-icon> Add New Fee & Commission
-        </button>
-    </div> -->
 
     <div class="table-container mat-elevation-z8">
         <div class="loading-shade" *ngIf="isLoading">
@@ -48,9 +39,6 @@
                     <button mat-icon-button color="primary" (click)="editFee(fee)" matTooltip="Edit">
                         <mat-icon>edit</mat-icon>
                     </button>
-                    <!-- <button mat-icon-button color="warn" (click)="deleteFee(fee.basicFeeId)" matTooltip="Delete">
-                        <mat-icon>delete</mat-icon>
-                    </button> -->
                 </td>
             </ng-container>
 

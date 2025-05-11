@@ -14,10 +14,6 @@
         background: none;
         box-shadow: none;
 
-        // &:hover {
-        //     @include box-shadow(2);
-        // }
-
         .loading-shade {
             position: absolute;
             top: 0;
@@ -30,28 +26,6 @@
             align-items: center;
             justify-content: center;
         }
-
-        // mat-card-header {
-        //     padding-bottom: 16px;
-        //     border-bottom: 1px solid $divider-color;
-        //     margin-bottom: 16px;
-
-        //     mat-card-title {
-        //         display: flex;
-        //         align-items: center;
-        //         gap: 8px;
-        //         font-size: 18px;
-        //         font-weight: 500;
-
-        //         mat-icon {
-        //             color: $primary-color;
-        //         }
-        //     }
-
-        //     mat-card-subtitle {
-        //         color: $text-secondary;
-        //     }
-        // }
 
         .details-form {
             display: flex;

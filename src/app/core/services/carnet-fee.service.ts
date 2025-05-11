@@ -37,7 +37,6 @@ export class CarnetFeeService {
     const feeCommission = {
       P_SPID: spid,
       P_PARAMID: data.feeType,
-      //P_DESCRIPTION: data.description,
       P_COMMRATE: data.commissionRate,
       P_EFFDATE: this.commonService.formatUSDate(data.effectiveDate),
       P_USERID: this.userService.getUser()

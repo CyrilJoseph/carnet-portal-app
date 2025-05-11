@@ -42,7 +42,6 @@ export class SecurityDepositComponent implements OnInit {
   };
 
   countries: Country[] = [];
-  //commodities: Commodity[] = [];
 
   @Input() isEditMode = false;
   @Input() spid: number = 0;
@@ -81,7 +80,6 @@ export class SecurityDepositComponent implements OnInit {
   ngOnInit(): void {
     this.loadSecurityDeposits();
     this.loadCountries();
-    //  this.loadCommodities();
   }
 
   ngAfterViewInit() {
@@ -116,25 +114,14 @@ export class SecurityDepositComponent implements OnInit {
     });
   }
 
-  // loadCommodities(): void {
-  //   this.commonService.getCommodities().subscribe({
-  //     next: (commodities) => {
-  //       this.commodities = commodities;
-  //     },
-  //     error: (error) => {
-  //       console.error('Error loading commodities:', error);
-  //     }
-  //   });
+  // applyFilter(event: Event): void {
+  //   const filterValue = (event.target as HTMLInputElement).value;
+  //   this.dataSource.filter = filterValue.trim().toLowerCase();
+
+  //   if (this.dataSource.paginator) {
+  //     this.dataSource.paginator.firstPage();
+  //   }
   // }
-
-  applyFilter(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-  }
 
   addNewDeposit(): void {
     this.showForm = true;
@@ -253,9 +240,4 @@ export class SecurityDepositComponent implements OnInit {
     const country = this.countries.find(c => c.value === code);
     return country ? country.name : code;
   }
-
-  // getCommodityName(code: string): string {
-  //   const commodity = this.commodities.find(c => c.value === code);
-  //   return commodity ? commodity.name : code;
-  // }
 }

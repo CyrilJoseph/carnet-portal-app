@@ -35,16 +35,5 @@ export class HomeComponent {
   }
 
   exportData() {
-    // this.dataService.exportCarnetData().subscribe({
-    //   next: (blob) => {
-    //     const url = window.URL.createObjectURL(blob);
-    //     const a = document.createElement('a');
-    //     a.href = url;
-    //     a.download = 'carnet_data.xlsx';
-    //     a.click();
-    //     window.URL.revokeObjectURL(url);
-    //   },
-    //   error: (error) => console.error('Error exporting data:', error)
-    // });
   }
 }

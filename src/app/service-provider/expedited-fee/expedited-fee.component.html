@@ -77,7 +77,6 @@
             </div>
 
             <div class="form-row">
-                <!-- <mat-form-field appearance="outline"> -->
                 <mat-label>Customer Type</mat-label>
                 <mat-radio-group formControlName="customerType" required class="horizontal-group">
                     <mat-radio-button *ngFor="let type of customerTypes" [value]="type.value" class="radio-button">
@@ -87,7 +86,6 @@
                 <mat-error *ngIf="feeForm.get('customerType')?.errors?.['required']">
                     Customer type is required
                 </mat-error>
-                <!-- </mat-form-field> -->
             </div>
 
             <div class="form-row">
