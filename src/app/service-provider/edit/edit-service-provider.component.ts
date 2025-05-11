@@ -13,10 +13,11 @@ import { ExpeditedFeeComponent } from "../expedited-fee/expedited-fee.component"
 import { SecurityDepositComponent } from "../security-deposit/security-deposit.component";
 import { UserPreferences } from '../../core/models/user-preference';
 import { UserPreferencesService } from '../../core/services/user-preference.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-edit-service-provider',
-  imports: [AngularMaterialModule, BasicDetailsComponent, ContactsComponent, CarnetSequenceComponent, CarnetFeeComponent, BasicFeeComponent, CounterfoilFeeComponent, ContinuationSheetFeeComponent, ExpeditedFeeComponent, SecurityDepositComponent],
+  imports: [AngularMaterialModule, BasicDetailsComponent, ContactsComponent, CarnetSequenceComponent, CarnetFeeComponent, BasicFeeComponent, CounterfoilFeeComponent, ContinuationSheetFeeComponent, ExpeditedFeeComponent, SecurityDepositComponent, CommonModule],
   templateUrl: './edit-service-provider.component.html',
   styleUrl: './edit-service-provider.component.scss'
 })

@@ -1,4 +1,4 @@
-<h2 class="page-header">Manage {{this.serviceProviderName}}</h2>
+<h2 *ngIf="this.serviceProviderName" class="page-header">Manage {{this.serviceProviderName}}</h2>
 
 <div class="service-provider-action-buttons">
     <button mat-button (click)="accordion().openAll()">Expand All</button>

@@ -145,11 +145,12 @@ export class CommonService {
     );
   }
 
-  formatUSDate(date: Date): string {
-    return new Date(date).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit'
-    });
+  formatUSDate(datetime: Date): string {
+    const date = new Date(datetime);
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(date.getUTCDate()).padStart(2, '0');
+    const year = date.getUTCFullYear();
+
+    return `${month}/${day}/${year}`;
   }
 }
