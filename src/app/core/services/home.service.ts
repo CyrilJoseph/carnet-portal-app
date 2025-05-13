@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UserService } from './user.service';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -13,12 +13,30 @@ export class HomeService {
 
   constructor(private http: HttpClient, private userService: UserService) { }
 
-  getHomePageDataById(id: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/${this.apiDb}/GetHomePageData/${id}`);
-  }
-
   getCarnetSummaryData(): Observable<any> {
     const userid = this.userService.getUser();
     return this.http.get(`${this.apiUrl}/${this.apiDb}/GetCarnetSummaryData/${userid}`);
+  }
+
+  getCarnetDataByStatus(spid: number, carnetStatus: string): Observable<any> {
+    const userid = this.userService.getUser();
+    return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetCarnetDetailsbyCarnetStatus/${spid}/${userid}/${carnetStatus}`).pipe(
+      map(response => this.mapToCarnetData(response)));
+  }
+
+  private mapToCarnetData(data: any[]): any[] {
+    return data.map(item => ({
+      applicationName: item.APPLICATIONNAME,
+      holderName: item.HOLDERNAME,
+      carnetNumber: item.CARNETNO,
+      usSets: item.USSETS,
+      foreignSets: item.FOREIGNSETS,
+      transitSets: item.TRANSITSETS,
+      carnetValue: item.CARNETVALUE,
+      issueDate: item.ISSUEDATE || null,
+      expiryDate: item.EXPDATE || null,
+      orderType: item.ORDERTYPE,
+      carnetStatus: item.CARNETSTATUS
+    }));
   }
 }

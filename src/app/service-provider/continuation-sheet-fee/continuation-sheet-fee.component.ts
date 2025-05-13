@@ -137,10 +137,8 @@ export class ContinuationSheetFeeComponent implements OnInit {
     this.readOnlyFields.lastChangedDate = continuationSheet.dateCreated;
     this.readOnlyFields.lastChangedBy = continuationSheet.createdBy;
 
-    if (this.isEditMode) {
-      this.continuationSheetForm.get('customerType')?.disable();
-      this.continuationSheetForm.get('carnetType')?.disable();
-    }
+    this.continuationSheetForm.get('customerType')?.disable();
+    this.continuationSheetForm.get('carnetType')?.disable();
   }
 
   saveContinuationSheet(): void {

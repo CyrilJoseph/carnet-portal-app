@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ChartConfiguration, ChartData, ChartEvent, ChartType } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { AngularMaterialModule } from '../../shared/module/angular-material.module';
@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 })
 export class ChartComponent {
   @Input() chartData: any[] = [];
+  @Output() carnetStatusData = new EventEmitter<any>();
 
   constructor(private router: Router) { }
 
@@ -20,13 +21,22 @@ export class ChartComponent {
     this.router.navigate(['/service-provider', spid]);
   }
 
-  public chartClicked({ event, active }: { event?: ChartEvent, active?: any[] }): void {
+  public chartClicked(event: any, chartIndex: number): void {
+    const active = event.active;
+    if (active?.length) {
+      const dataIndex = active[0].index;
+      const chart = this.chartConfigs[chartIndex];
 
-    // if (active && active?.length > 0) {
-    //   console.log(event);
-    //   // You can add custom logic here for what happens when a segment is clicked
-    //   // For example: this.router.navigate(['/carnets', label]);
-    // }
+      const spid = chart.spid as number;
+      const carnetStatus = chart.data?.labels?.[dataIndex];
+
+      if (carnetStatus !== undefined) {
+        this.carnetStatusData.emit({
+          spid: spid,
+          carnetStatus: carnetStatus
+        });
+      }
+    }
   }
 
   public chartOptions: ChartConfiguration['options'] = {

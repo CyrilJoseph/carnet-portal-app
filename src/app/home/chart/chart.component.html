@@ -6,7 +6,7 @@
     </div>
 
     <div class="charts-grid">
-        <div *ngFor="let config of chartConfigs" class="chart-card">
+        <div *ngFor="let config of chartConfigs; let i = index" class="chart-card">
             <div class="chart-header">
                 <h4 class="chart-title">{{ config.title }}</h4>
                 <button mat-icon-button class="edit-icon" (click)="navigateToManageProvider(config.spid)"
@@ -16,7 +16,7 @@
             </div>
             <div class="chart-wrapper">
                 <canvas baseChart [data]="config.data" [options]="config.options" [type]="chartType"
-                    (chartClick)="chartClicked($event)" [plugins]="chartPlugins">
+                    (chartClick)="chartClicked($event, i)" [plugins]="chartPlugins">
                 </canvas>
             </div>
         </div>

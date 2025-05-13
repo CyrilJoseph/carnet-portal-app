@@ -115,6 +115,8 @@ export class CarnetFeeComponent implements OnInit {
     this.isEditing = false;
     this.currentFeeCommissionId = null;
     this.feeCommissionForm.reset();
+
+    this.feeCommissionForm.get('feeType')?.enable();
   }
 
   editFeeCommission(feeCommission: CarnetFee): void {
@@ -130,9 +132,7 @@ export class CarnetFeeComponent implements OnInit {
     this.readOnlyFields.lastChangedDate = feeCommission.dateCreated;
     this.readOnlyFields.lastChangedBy = feeCommission.createdBy;
 
-    if (this.isEditMode) {
-      this.feeCommissionForm.get('feeType')?.disable();
-    }
+    this.feeCommissionForm.get('feeType')?.disable();
   }
 
   saveFeeCommission(): void {

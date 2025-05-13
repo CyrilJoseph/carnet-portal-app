@@ -143,7 +143,7 @@ export class ExpeditedFeeComponent implements OnInit, OnDestroy {
         }
       });
   }
-  
+
   // applyFilter(event: Event): void {
   //   const filterValue = (event.target as HTMLInputElement).value;
   //   this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -186,13 +186,11 @@ export class ExpeditedFeeComponent implements OnInit, OnDestroy {
     this.readOnlyFields.lastChangedDate = fee.dateCreated;
     this.readOnlyFields.lastChangedBy = fee.createdBy;
 
-    if (this.isEditMode) {
-      this.feeForm.get('customerType')?.disable();
-      this.feeForm.get('deliveryType')?.disable();
-      this.feeForm.get('startTime')?.disable();
-      this.feeForm.get('endTime')?.disable();
-      this.feeForm.get('timeZone')?.disable();
-    }
+    this.feeForm.get('customerType')?.disable();
+    this.feeForm.get('deliveryType')?.disable();
+    this.feeForm.get('startTime')?.disable();
+    this.feeForm.get('endTime')?.disable();
+    this.feeForm.get('timeZone')?.disable();
   }
 
   saveFee(): void {

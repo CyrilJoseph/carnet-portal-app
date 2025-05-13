@@ -159,12 +159,10 @@ export class CounterfoilFeeComponent implements OnInit {
     this.readOnlyFields.lastChangedDate = counterfoil.dateCreated;
     this.readOnlyFields.lastChangedBy = counterfoil.createdBy;
 
-    if (this.isEditMode) {
-      this.counterfoilForm.get('customerType')?.disable();
-      this.counterfoilForm.get('carnetType')?.disable();
-      this.counterfoilForm.get('startSets')?.disable();
-      this.counterfoilForm.get('endSets')?.disable();
-    }
+    this.counterfoilForm.get('customerType')?.disable();
+    this.counterfoilForm.get('carnetType')?.disable();
+    this.counterfoilForm.get('startSets')?.disable();
+    this.counterfoilForm.get('endSets')?.disable();
   }
 
   saveCounterfoil(): void {

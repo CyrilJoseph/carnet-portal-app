@@ -155,10 +155,8 @@ export class BasicFeeComponent {
     this.readOnlyFields.lastChangedDate = fee.dateCreated;
     this.readOnlyFields.lastChangedBy = fee.createdBy;
 
-    if (this.isEditMode) {
-      this.feeForm.get('startCarnetValue')?.disable();
-      this.feeForm.get('endCarnetValue')?.disable();
-    }
+    this.feeForm.get('startCarnetValue')?.disable();
+    this.feeForm.get('endCarnetValue')?.disable();
   }
 
   saveFee(): void {

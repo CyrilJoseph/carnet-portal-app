@@ -5,11 +5,12 @@ import { Region } from '../models/region';
 import { Country } from '../models/country';
 import { State } from '../models/state';
 import { environment } from '../../../environments/environment';
-import { Commodity } from '../models/commodity';
 import { DeliveryType } from '../models/delivery-type';
 import { FeeType } from '../models/fee-type';
 import { TimeZone } from '../models/timezone';
 import { BondSurety } from '../models/bond-surety';
+import { CargoPolicy } from '../models/cargo-policy';
+import { CargoSurety } from '../models/cargo-surety';
 
 @Injectable({
   providedIn: 'root'
@@ -56,18 +57,6 @@ export class CommonService {
           id: item.REGIONID,
           region: item.REGION,
           regionname: item.REGIONNAME
-        }))
-      )
-    );
-  }
-
-  getCommodities(spid: number = 0): Observable<Commodity[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetParamValues?P_PARAMTYPE=002&P_SPID=0`).pipe(
-      map((response) =>
-        response.map((item) => ({
-          name: item.PARAMDESC,
-          id: item.PARAMID,
-          value: item.PARAMVALUE
         }))
       )
     );
@@ -121,7 +110,7 @@ export class CommonService {
     );
   }
 
-  getCargoPolicies(spid: number = 0): Observable<FeeType[]> {
+  getCargoPolicies(spid: number = 0): Observable<CargoPolicy[]> {
     return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetParamValues?P_PARAMTYPE=004&P_SPID=0`).pipe(
       map((response) =>
         response.map((item) => ({
@@ -133,7 +122,7 @@ export class CommonService {
     );
   }
 
-  getCargoSuretys(spid: number = 0): Observable<FeeType[]> {
+  getCargoSuretys(spid: number = 0): Observable<CargoSurety[]> {
     return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetParamValues?P_PARAMTYPE=005&P_SPID=0`).pipe(
       map((response) =>
         response.map((item) => ({

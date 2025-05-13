@@ -10,7 +10,6 @@ import { NotificationService } from '../../core/services/notification.service';
 import { CommonModule } from '@angular/common';
 import { CustomPaginator } from '../../shared/custom-paginator';
 import { Country } from '../../core/models/country';
-import { Commodity } from '../../core/models/commodity';
 import { CommonService } from '../../core/services/common.service';
 import { SecurityDeposit } from '../../core/models/service-provider/security-deposit';
 import { SecurityDepositService } from '../../core/services/security-deposit.service';
@@ -155,12 +154,10 @@ export class SecurityDepositComponent implements OnInit {
     this.readOnlyFields.lastChangedDate = deposit.dateCreated;
     this.readOnlyFields.lastChangedBy = deposit.createdBy;
 
-    if (this.isEditMode) {
-      this.depositForm.get('holderType')?.disable();
-      this.depositForm.get('uscibMember')?.disable();
-      this.depositForm.get('specialCommodity')?.disable();
-      this.depositForm.get('specialCountry')?.disable();
-    }
+    this.depositForm.get('holderType')?.disable();
+    this.depositForm.get('uscibMember')?.disable();
+    this.depositForm.get('specialCommodity')?.disable();
+    this.depositForm.get('specialCountry')?.disable();
   }
 
   saveDeposit(): void {
