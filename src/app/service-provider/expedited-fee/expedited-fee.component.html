@@ -129,6 +129,10 @@
                 </mat-form-field>
             </div>
 
+            <mat-error *ngIf="feeForm?.errors?.['invalidRange']" class="form-error">
+                End time must be greater than start time
+            </mat-error>
+
             <div class="form-row">
                 <mat-form-field appearance="outline">
                     <mat-label>Time Zone</mat-label>

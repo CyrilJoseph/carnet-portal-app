@@ -75,7 +75,7 @@ export class ExpeditedFeeComponent implements OnInit, OnDestroy {
       timeZone: ['', Validators.required],
       fee: [0, [Validators.required, Validators.min(0)]],
       effectiveDate: ['', Validators.required]
-    });
+    }, { validator: this.validateNumberRange });
   }
 
   ngOnInit(): void {
@@ -91,6 +91,12 @@ export class ExpeditedFeeComponent implements OnInit, OnDestroy {
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+  }
+
+  private validateNumberRange(group: FormGroup): { [key: string]: any } | null {
+    const start = +group.get('startTime')?.value;
+    const end = +group.get('endTime')?.value;
+    return start && end && start >= end ? { invalidRange: true } : null;
   }
 
   loadExpeditedFees(): void {

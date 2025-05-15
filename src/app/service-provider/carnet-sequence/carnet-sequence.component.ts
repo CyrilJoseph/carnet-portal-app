@@ -84,10 +84,6 @@ export class CarnetSequenceComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
 
-  private initForm(): void {
-
-  }
-
   private validateNumberRange(group: FormGroup): { [key: string]: any } | null {
     const start = +group.get('startNumber')?.value;
     const end = +group.get('endNumber')?.value;
