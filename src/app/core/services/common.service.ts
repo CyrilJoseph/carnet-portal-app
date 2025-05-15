@@ -11,6 +11,7 @@ import { TimeZone } from '../models/timezone';
 import { BondSurety } from '../models/bond-surety';
 import { CargoPolicy } from '../models/cargo-policy';
 import { CargoSurety } from '../models/cargo-surety';
+import { CarnetStatus } from '../models/carnet-status';
 
 @Injectable({
   providedIn: 'root'
@@ -129,6 +130,19 @@ export class CommonService {
           name: item.PARAMDESC,
           id: item.PARAMID,
           value: item.PARAMVALUE
+        }))
+      )
+    );
+  }
+
+  getCarnetStatuses(spid: number = 0): Observable<CarnetStatus[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/${this.apiDb}/GetParamValues?P_PARAMTYPE=011&P_SPID=0`).pipe(
+      map((response) =>
+        response.map((item) => ({
+          name: item.PARAMDESC,
+          id: item.PARAMID,
+          value: item.PARAMVALUE,
+          color: item.ADDLPARAMVALUE1,
         }))
       )
     );

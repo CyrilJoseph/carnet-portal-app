@@ -12,6 +12,8 @@ import { UserPreferences } from '../core/models/user-preference';
 import { UserPreferencesService } from '../core/services/user-preference.service';
 import { CommonModule } from '@angular/common';
 import { CustomPaginator } from '../shared/custom-paginator';
+import { CommonService } from '../core/services/common.service';
+import { CarnetStatus } from '../core/models/carnet-status';
 
 @Component({
   selector: 'app-home',
@@ -25,6 +27,7 @@ export class HomeComponent {
   isLoading = false;
   showTable = false;
   userPreferences: UserPreferences;
+  carnetStatuses: CarnetStatus[] = [];
 
   dataSource = new MatTableDataSource<any>();
 
@@ -45,12 +48,25 @@ export class HomeComponent {
     private homeService: HomeService,
     private errorHandler: ApiErrorHandlerService,
     private notificationService: NotificationService,
-    userPrefenceService: UserPreferencesService) {
+    userPrefenceService: UserPreferencesService,
+    private commonService: CommonService) {
     this.userPreferences = userPrefenceService.getPreferences();
   }
 
   ngOnInit(): void {
+    this.loadCarnetStatuses();
     this.loadCarnetData();
+  }
+
+  loadCarnetStatuses(): void {
+    this.commonService.getCarnetStatuses().subscribe({
+      next: (carnetStatuses) => {
+        this.carnetStatuses = carnetStatuses;
+      },
+      error: (error) => {
+        console.error('Error loading carnet status:', error);
+      }
+    });
   }
 
   loadCarnetData(): void {
@@ -88,5 +104,10 @@ export class HomeComponent {
   }
 
   exportData() {
+  }
+
+  getCarnetStatusLabel(value: string): string {
+    const carnetStatus = this.carnetStatuses.find(t => t.value === value);
+    return carnetStatus ? carnetStatus.name : value;
   }
 }

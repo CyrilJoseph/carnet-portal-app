@@ -8,7 +8,7 @@
 
         <!-- Chart Section -->
         <div class="chart-section">
-            <app-chart [chartData]="carnetData" (carnetStatusData)="onCarnetStatusClick($event)"></app-chart>
+            <app-chart [chartData]="carnetData" [carnetStatuses]="carnetStatuses" (carnetStatusData)="onCarnetStatusClick($event)"></app-chart>
         </div>
 
         <!-- Carnet Details Section -->
@@ -72,7 +72,7 @@
 
                     <ng-container matColumnDef="carnetStatus">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Carnet Status</th>
-                        <td mat-cell *matCellDef="let item">{{ item.carnetStatus }}</td>
+                        <td mat-cell *matCellDef="let item">{{ getCarnetStatusLabel(item.carnetStatus) }}</td>
                     </ng-container>
 
                     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

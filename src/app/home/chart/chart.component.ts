@@ -4,6 +4,7 @@ import { ChartConfiguration, ChartData, ChartEvent, ChartType } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { AngularMaterialModule } from '../../shared/module/angular-material.module';
 import { Router } from '@angular/router';
+import { CarnetStatus } from '../../core/models/carnet-status';
 
 @Component({
   selector: 'app-chart',
@@ -13,6 +14,7 @@ import { Router } from '@angular/router';
 })
 export class ChartComponent {
   @Input() chartData: any[] = [];
+  @Input() carnetStatuses: CarnetStatus[] = [];
   @Output() carnetStatusData = new EventEmitter<any>();
 
   constructor(private router: Router) { }
@@ -28,12 +30,12 @@ export class ChartComponent {
       const chart = this.chartConfigs[chartIndex];
 
       const spid = chart.spid as number;
-      const carnetStatus = chart.data?.labels?.[dataIndex];
+      const carnetStatus = this.carnetStatuses.find(t => t.name === chart.data?.labels?.[dataIndex]);
 
       if (carnetStatus !== undefined) {
         this.carnetStatusData.emit({
           spid: spid,
-          carnetStatus: carnetStatus
+          carnetStatus: carnetStatus.value
         });
       }
     }
@@ -86,18 +88,20 @@ export class ChartComponent {
   private processChartData(): void {
     this.chartConfigs = this.chartData.map(provider => {
       const statusColors = provider.CARNETSTATUS.map((status: string) => {
-        if (status === 'Valid') return '#AFDC8F';
-        if (status === 'Open Claim') return '#92C5F9';
-        if (status === 'Possible Claim') return '#B6A6E9';
-        if (status === 'Closed Claim') return '#F8AE54';
-        return '#9E9E9E';
+        const carnetStatus = this.carnetStatuses.find(t => t.value === status);
+        return carnetStatus ? carnetStatus.color : '#9E9E9E';
+      });
+
+      const labels = provider.CARNETSTATUS.map((status: string) => {
+        const carnetStatus = this.carnetStatuses.find(t => t.value === status);
+        return carnetStatus!.name;
       });
 
       return {
         title: provider.Service_Provider_Name,
         spid: provider.SPID,
         data: {
-          labels: provider.CARNETSTATUS,
+          labels: labels,
           datasets: [{
             data: provider.Carnet_Count,
             backgroundColor: statusColors,
